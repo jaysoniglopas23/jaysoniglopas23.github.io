@@ -1,2 +1,5 @@
 *.bak
 .DS_Store
+
+# Source checkout of the YES site (separate repo: yesltd.git) — site files live at repo root
+YES_corporate_site_final/
