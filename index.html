@@ -989,42 +989,10 @@
     }
 
     /* ===== HERO META ===== */
-    .availability {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 16px;
-      margin-bottom: 20px;
-      border-radius: 999px;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      background: rgba(52, 211, 153, 0.08);
-      color: #6ee7b7;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .availability::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #34d399;
-      animation: availPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes availPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
-    }
-
     .hero-location {
       color: #64748b;
       font-size: 14px;
       margin-bottom: 28px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .availability::before { animation: none; }
     }
 
     /* ===== EDUCATION ===== */
@@ -1480,7 +1448,6 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <p class="availability">Open to remote work (flexible hours)</p>
       <p class="greeting">Hello, I'm</p>
       <h1><span>Jayson Iglopas</span></h1>
       <p class="tagline">AI Engineer | React Native Developer (Android &amp; iOS) | Full-Stack (Node.js)</p>
