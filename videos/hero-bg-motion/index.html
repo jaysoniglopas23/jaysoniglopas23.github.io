@@ -47,8 +47,8 @@
         background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, rgba(56, 189, 248, 0.02) 38%, transparent 66%);
       }
       #orb-indigo {
-        left: 980px;
-        top: -40px;
+        left: 890px;
+        top: 10px;
         width: 1100px;
         height: 1100px;
         background: radial-gradient(circle, rgba(129, 140, 248, 0.14) 0%, rgba(129, 140, 248, 0.05) 40%, transparent 68%);
@@ -117,7 +117,7 @@
         box-shadow:
           0 24px 60px rgba(2, 6, 23, 0.55),
           inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        transform-origin: 0 0;
+        transform-origin: 50% 50%;
         white-space: nowrap;
         will-change: transform, opacity;
       }
@@ -210,13 +210,26 @@
         background: #38bdf8;
       }
 
-      /* calm the paragraph side + gentle vignette */
+      /* ---------- orbit rings around the hero photo (centre 1440,560) ---------- */
+      #orbit {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        pointer-events: none;
+        /* fade the rings out where they would cross into the text zone */
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 52%, rgba(0, 0, 0, 0.35) 60%, #000 72%);
+        mask-image: linear-gradient(90deg, transparent 0%, transparent 52%, rgba(0, 0, 0, 0.35) 60%, #000 72%);
+      }
+
+      /* soft elliptical darkening over the hero text zone + gentle vignette */
       #calm {
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(90deg, rgba(5, 13, 26, 0.7) 0%, rgba(5, 13, 26, 0.55) 34%, rgba(5, 13, 26, 0.22) 52%, rgba(5, 13, 26, 0) 66%),
-          radial-gradient(ellipse at 62% 50%, transparent 55%, rgba(5, 13, 26, 0.6) 100%);
+          radial-gradient(ellipse 760px 480px at 740px 560px, rgba(5, 13, 26, 0.74) 0%, rgba(5, 13, 26, 0.6) 42%, rgba(5, 13, 26, 0.22) 76%, rgba(5, 13, 26, 0) 100%),
+          radial-gradient(ellipse at 58% 50%, transparent 58%, rgba(5, 13, 26, 0.5) 100%);
         pointer-events: none;
       }
     </style>
@@ -240,6 +253,10 @@
         <div id="orb-indigo" class="orb" data-layout-allow-overflow></div>
         <div id="orb-violet" class="orb" data-layout-allow-overflow></div>
         <div id="icon-field" aria-hidden="true" data-layout-ignore></div>
+        <svg id="orbit" viewBox="0 0 1920 1080" aria-hidden="true" data-layout-ignore>
+          <circle id="orbit-inner" cx="1440" cy="560" r="390" fill="none" stroke="rgba(129, 140, 248, 0.2)" stroke-width="1.5" stroke-linecap="round" />
+          <circle id="orbit-outer" cx="1440" cy="560" r="470" fill="none" stroke="rgba(56, 189, 248, 0.22)" stroke-width="3" stroke-linecap="round" />
+        </svg>
         <div id="cards" aria-hidden="true"></div>
         <div id="calm"></div>
       </div>
@@ -250,6 +267,7 @@
         const H = 1080;
         const LOOP = 12; // seconds — every cycle below is a whole number per LOOP
         const TAU = Math.PI * 2;
+        const PHOTO = { x: 1440, y: 560 }; // hero profile photo centre (video coords)
 
         // Fixed-seed PRNG (mulberry32) — deterministic layout
         function mulberry32(a) {
@@ -314,20 +332,28 @@
           mid: { s: 0.8, op: 0.46, blur: 0.6, glass: true },
           far: { s: 0.62, op: 0.3, blur: 1.6, glass: false },
         };
+        // Hero layout: x,y = card CENTRE in 1920x1080 video space.
+        // Photo keep-clear: circle r=310 at (1440,560). Text zone: x 300-1180, y 300-820. Nav: y < 110.
+        // Cards orbit the photo in a top arc and a bottom arc; far cards fill the bands above/below the text.
         const CARDS = [
-          { id: "tomo", label: "Tomo AI", sub: "Gemini 2.5 Flash", icon: "sparkle", tone: "violet", x: 1130, y: 96, d: "near" },
-          { id: "chat", label: "Group Chat", sub: "Socket.IO", icon: "chat", tone: "sky", x: 1540, y: 206, d: "mid", typing: true },
-          { id: "live", label: "Live Streaming", sub: "RTMP · OBS", icon: "video", tone: "indigo", x: 1170, y: 336, d: "near", live: true },
-          { id: "push", label: "Push Notifications", sub: "", icon: "bell", tone: "violet", x: 1452, y: 560, d: "near", badge: true },
-          { id: "board", label: "Leaderboards", sub: "", icon: "trophy", tone: "sky", x: 1104, y: 676, d: "mid" },
-          { id: "store", label: "Store Orders", sub: "In-app purchases", icon: "bag", tone: "indigo", x: 1500, y: 784, d: "mid" },
-          { id: "book", label: "Bookings", sub: "Restaurant & hotel", icon: "calendar", tone: "sky", x: 1112, y: 900, d: "near" },
-          { id: "admin", label: "Admin Dashboard", sub: "", icon: "chart", tone: "violet", x: 1600, y: 962, d: "far" },
-          { id: "cite", label: "Cited Sources", sub: "Search grounding", icon: "link", tone: "sky", x: 1630, y: 62, d: "far" },
-          { id: "realtime", label: "Real-time", sub: "200+ events", icon: "zap", tone: "indigo", x: 1640, y: 430, d: "far" },
-          // calm left side: only far, dim, blurred cards near the margins
-          { id: "oauth", label: "Google Sign-In", sub: "OAuth", icon: "key", tone: "indigo", x: 96, y: 70, d: "far", dim: 0.75 },
-          { id: "rate", label: "Rate Limiting", sub: "Per-user auth", icon: "lock", tone: "sky", x: 620, y: 948, d: "far", dim: 0.75 },
+          // top arc
+          { id: "tomo", label: "Tomo AI", sub: "Gemini 2.5 Flash", icon: "sparkle", tone: "violet", x: 1755, y: 196, d: "near" },
+          { id: "chat", label: "Group Chat", sub: "Socket.IO", icon: "chat", tone: "sky", x: 1446, y: 174, d: "mid", typing: true },
+          // bottom arc
+          { id: "live", label: "Live Streaming", sub: "RTMP · OBS", icon: "video", tone: "indigo", x: 1020, y: 950, d: "near", live: true },
+          { id: "push", label: "Push Notifications", sub: "", icon: "bell", tone: "violet", x: 1706, y: 972, d: "near", badge: true },
+          // top band, above the text block
+          { id: "board", label: "Leaderboards", sub: "", icon: "trophy", tone: "sky", x: 720, y: 212, d: "mid" },
+          // bottom arc
+          { id: "store", label: "Store Orders", sub: "In-app purchases", icon: "bag", tone: "indigo", x: 1356, y: 988, d: "mid" },
+          // top arc
+          { id: "book", label: "Bookings", sub: "Restaurant & hotel", icon: "calendar", tone: "sky", x: 1135, y: 194, d: "near" },
+          // far, dim, blurred — edge bands only
+          { id: "admin", label: "Admin Dashboard", sub: "", icon: "chart", tone: "violet", x: 452, y: 176, d: "far" },
+          { id: "cite", label: "Cited Sources", sub: "Search grounding", icon: "link", tone: "sky", x: 680, y: 1004, d: "far" },
+          { id: "realtime", label: "Real-time", sub: "200+ events", icon: "zap", tone: "indigo", x: 160, y: 620, d: "far", dim: 0.75 },
+          { id: "oauth", label: "Google Sign-In", sub: "OAuth", icon: "key", tone: "indigo", x: 172, y: 164, d: "far", dim: 0.75 },
+          { id: "rate", label: "Rate Limiting", sub: "Per-user auth", icon: "lock", tone: "sky", x: 420, y: 948, d: "far", dim: 0.75 },
         ];
 
         const cardsHost = document.getElementById("cards");
@@ -338,8 +364,6 @@
           el.className = "card tone-" + c.tone + (dep.glass ? " glass" : "");
           el.setAttribute("data-layout-ignore", "");
           el.setAttribute("aria-hidden", "true");
-          el.style.left = c.x + "px";
-          el.style.top = c.y + "px";
           if (dep.blur) el.style.filter = "blur(" + dep.blur + "px)";
           let extra = "";
           if (c.badge) extra += '<span class="badge" id="badge-' + c.id + '"></span>';
@@ -354,6 +378,10 @@
             (c.sub ? '<div class="card-sub">' + c.sub + "</div>" : "") +
             "</div>";
           cardsHost.appendChild(el);
+          // anchor at (x,y); renderAt prefixes translate(-50%,-50%) so (x,y) is the card centre
+          // (no DOM measurement; scale/rotation pivot is the centre via transform-origin 50% 50%)
+          el.style.left = c.x + "px";
+          el.style.top = c.y + "px";
           return {
             c,
             el,
@@ -391,10 +419,19 @@
             if ((r * COLS + c) % 6 === 5) continue; // leave a few gaps — not a lattice
             const cw = W / COLS;
             const rh = H / ROWS;
-            const bx = cw * (c + 0.15 + rand() * 0.7);
-            const by = rh * (r + 0.15 + rand() * 0.7);
+            let bx = cw * (c + 0.15 + rand() * 0.7);
+            let by = rh * (r + 0.15 + rand() * 0.7);
             const size = Math.round(range(30, 62));
-            const right = smooth(W * 0.4, W * 0.7, bx);
+            // keep icons out from behind the profile photo: push radially to >= 400px from its centre
+            const dxp = bx - PHOTO.x;
+            const dyp = by - PHOTO.y;
+            const dp = Math.hypot(dxp, dyp);
+            if (dp < 400) {
+              const k = 400 / Math.max(dp, 1);
+              bx = PHOTO.x + dxp * k;
+              by = PHOTO.y + dyp * k;
+            }
+            const right = smooth(1100, 1500, bx);
             const el = document.createElement("div");
             el.id = "bgi-" + n;
             el.className = "bg-icon";
@@ -434,9 +471,24 @@
           push: { rgb: "192, 132, 252", win: [7.4, 8.2, 9.2, 10.2] },
         };
 
+        // ---------- Orbit rings: dash patterns with an exact whole number of periods per circumference ----------
+        // Shifting the dash offset by exactly one period per LOOP == rotating by 1/N turn → seamless.
+        const ORBITS = [
+          { el: document.getElementById("orbit-inner"), r: 390, n: 48, dash: 16, dir: -1 },
+          { el: document.getElementById("orbit-outer"), r: 470, n: 72, dash: 0.01, dir: 1 },
+        ].map((o) => {
+          const period = (TAU * o.r) / o.n;
+          o.el.setAttribute("stroke-dasharray", o.dash + " " + (period - o.dash).toFixed(4));
+          return Object.assign(o, { period });
+        });
+
         // ---------- Deterministic frame function: everything derives from t ----------
         function renderAt(t) {
           const ph = (t / LOOP) * TAU; // one full turn per LOOP
+
+          ORBITS.forEach((o) => {
+            o.el.setAttribute("stroke-dashoffset", (o.dir * o.period * ((t % LOOP) / LOOP)).toFixed(3));
+          });
 
           bgIcons.forEach((b) => {
             const x = b.bx + b.ax * Math.sin(ph * b.kx + b.px);
@@ -464,7 +516,7 @@
               k.iconEl.style.boxShadow = "0 0 " + (28 * e).toFixed(1) + "px rgba(" + g.rgb + "," + (0.55 * e).toFixed(3) + ")";
             }
             k.el.style.transform =
-              "translate(" + x.toFixed(2) + "px," + y.toFixed(2) + "px) rotate(" + r.toFixed(2) + "deg) scale(" + (k.s * lift).toFixed(4) + ")";
+              "translate(-50%,-50%) translate(" + x.toFixed(2) + "px," + y.toFixed(2) + "px) rotate(" + r.toFixed(2) + "deg) scale(" + (k.s * lift).toFixed(4) + ")";
             k.el.style.opacity = op.toFixed(3);
           });
 
