@@ -1,0 +1,27 @@
+{
+  "category": "webpage",
+  "category_note": "UI/feature showcase treated as an asset-free form category; schematic UI drawn in HTML/CSS/SVG, no capture.",
+  "duration_s": 12,
+  "fps": 30,
+  "canvas": { "w": 1280, "h": 720, "aspect": "16:9" },
+  "style": "Dark portfolio palette, calm-confident product motion, split frame: device mockup left (~40%), feature copy right (~60%), seamless loop.",
+  "palette": ["#050d1a", "#0f172a", "#e2e8f0", "#94a3b8", "#38bdf8", "#818cf8", "#c084fc"],
+  "font": "Inter",
+  "beats": [0, 2, 4, 6, 8, 10],
+  "export": "mp4",
+  "asset_needs": [],
+  "block": null,
+  "customize": {},
+  "content": {
+    "project": "Tomo AI",
+    "loop": "t=12 equals t=0 (beat-1 resting layout: empty chat, FEATURE 01 copy, dot 1 active)",
+    "scenes": [
+      { "id": "b1", "start": 0, "end": 2, "device": "phone", "title": "Chat UI", "motion": "user bubble slides in, typing dots, reply streams word by word" },
+      { "id": "b2", "start": 2, "end": 4, "device": "panel", "title": "Real-time backend", "motion": "App -> Node.js Socket.IO -> Gemini 2.5 Flash pipeline, lines draw, packets flow down and back" },
+      { "id": "b3", "start": 4, "end": 6, "device": "panel", "title": "Secure key proxy", "motion": "lock badge pops on server, auth chip, request counter 07->10 fills bar, limit gate drops, excess request bounces" },
+      { "id": "b4", "start": 6, "end": 8, "device": "panel", "title": "20-turn memory", "motion": "turn rows fill, counter 18->20, new turn arrives, oldest slides out, stack shifts up" },
+      { "id": "b5", "start": 8, "end": 10, "device": "phone", "title": "Prompt guardrails", "motion": "guardrail frame draws around reply, off-topic bubble bounces off, declined chip" },
+      { "id": "b6", "start": 10, "end": 12, "device": "phone", "title": "Grounded answers", "motion": "reply with [1][2] markers popping, source chips slide in; 11.45-11.85 return to beat-1 rest" }
+    ]
+  }
+}

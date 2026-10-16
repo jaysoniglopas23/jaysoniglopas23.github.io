@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jayson Iglopas | Full Stack Developer</title>
+  <title>Jayson Iglopas | AI Engineer, React Native &amp; Full-Stack Developer</title>
+  <meta name="description" content="Jayson Calibud Iglopas — AI Engineer, React Native Developer (Android & iOS) and Full-Stack Node.js developer. Open to remote work with flexible hours.">
+  <meta name="keywords" content="AI Engineer, React Native Developer, Full-Stack Developer, Node.js, TypeScript, Expo, Socket.IO, Google Gemini API, LLM integration, remote">
+  <meta property="og:title" content="Jayson Iglopas | AI Engineer, React Native &amp; Full-Stack Developer">
+  <meta property="og:description" content="React Native (Android & iOS), Node.js and LLM integration. Open to remote work (flexible hours).">
+  <meta property="og:image" content="https://jaysoniglopas23.github.io/images/myprofile.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -272,13 +277,14 @@
       font-size: 16px;
       color: #94a3b8;
       max-width: 520px;
-      margin-bottom: 40px;
+      margin-bottom: 16px;
       opacity: 0;
       animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s;
     }
 
     .hero-buttons {
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       opacity: 0;
       animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards 1s;
@@ -599,6 +605,12 @@
       font-size: 16px;
       color: #38bdf8;
       font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item .period {
+      font-size: 13px;
+      color: #64748b;
       margin-bottom: 16px;
     }
 
@@ -912,6 +924,107 @@
 
     .screenshot-item:hover .screenshot-caption {
       color: #38bdf8;
+    }
+
+    /* ===== PROJECT MOTION (HyperFrames renders) ===== */
+    .project-motion {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      background: radial-gradient(ellipse at 30% 20%, rgba(56, 189, 248, 0.08), transparent 60%), #0a1628;
+      margin-bottom: 28px;
+    }
+
+    .project-motion video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-motion .motion-fallback,
+    .shot-slot .shot-fallback {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #64748b;
+      font-size: 13px;
+      text-align: center;
+      padding: 16px;
+      border: 1px dashed rgba(56, 189, 248, 0.2);
+      border-radius: inherit;
+    }
+
+    .project-motion .motion-fallback strong,
+    .shot-slot .shot-fallback strong {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .project-motion.empty video,
+    .shot-slot.empty img { display: none; }
+    .project-motion.empty .motion-fallback,
+    .shot-slot.empty .shot-fallback { display: flex; }
+
+    .shot-slot {
+      position: relative;
+      width: 200px;
+      aspect-ratio: 9 / 19.5;
+    }
+
+    .screenshot-item .shot-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-features.single {
+      grid-template-columns: 1fr;
+    }
+
+    /* ===== HERO META ===== */
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      background: rgba(52, 211, 153, 0.08);
+      color: #6ee7b7;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .availability::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: availPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes availPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    }
+
+    .hero-location {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .availability::before { animation: none; }
     }
 
     /* ===== EDUCATION ===== */
@@ -1310,6 +1423,14 @@
         height: 340px;
       }
 
+      .shot-slot {
+        width: 160px;
+      }
+
+      .project-card {
+        padding: 20px;
+      }
+
       .scroll-indicator {
         display: none;
       }
@@ -1359,16 +1480,19 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
+      <p class="availability">Open to remote work (flexible hours)</p>
       <p class="greeting">Hello, I'm</p>
       <h1><span>Jayson Iglopas</span></h1>
-      <p class="tagline">Senior Full Stack Developer</p>
+      <p class="tagline">AI Engineer | React Native Developer (Android &amp; iOS) | Full-Stack (Node.js)</p>
       <p class="hero-desc">
-        Specializing in mobile and web application development with React Native and Django.
-        Building impactful social platforms and community-driven applications that connect people.
+        I build cross-platform mobile apps in React Native and Expo, real-time Node.js and Socket.IO backends,
+        and LLM features powered by the Google Gemini API.
       </p>
+      <p class="hero-location">Muntinlupa City, Philippines &middot; Remote, flexible hours</p>
       <div class="hero-buttons">
-        <a href="#projects" class="btn-primary">View My Work</a>
-        <a href="#contact" class="btn-secondary">Get In Touch</a>
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="Jayson_Iglopas_CV.pdf" class="btn-secondary" download>Download CV</a>
+        <a href="https://www.linkedin.com/in/jayson-iglopas-a18815245" class="btn-secondary" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
     <div class="hero-image">
@@ -1395,18 +1519,18 @@
     <div class="about-grid">
       <div class="about-text fade-in-left">
         <p>
-          I am a results-driven Senior Full Stack Developer at A-TECH IT Solution with a strong background in building
-          mobile and web applications from the ground up. I hold a Bachelor of Science in Information Technology
-          from Pamantasan ng Lungsod ng Muntinlupa.
+          I am an AI Engineer and React Native developer with six years of experience shipping Android and iOS apps
+          and the Node.js backends behind them. I am currently a Senior Software Developer at A-TECH IT Solution,
+          working fully remote.
         </p>
         <p>
-          I specialize in developing cross-platform mobile apps using React Native, backed by robust server-side
-          architectures. My work includes building complete social community platforms, dating applications,
-          and admin dashboards with real-time messaging, in-app purchases, and dynamic content management.
+          My work spans React Native and Expo front ends, Node.js / Express APIs, Socket.IO real-time systems,
+          MySQL and PostgreSQL databases, and AWS EC2 / Linux deployments. I built Tomo AI, an in-app assistant
+          that connects a React Native chat UI to Google Gemini 2.5 Flash through a secure Socket.IO backend.
         </p>
         <p>
-          I am passionate about delivering high-quality software solutions and I thrive in fast-paced environments
-          where I can take ownership of complex challenges and continuously push for excellence.
+          I hold a BS in Information Technology from Pamantasan ng Lungsod ng Muntinlupa and I am open to
+          remote React Native, Full-Stack, and AI Engineer roles with flexible hours.
         </p>
       </div>
       <div class="fade-in-right">
@@ -1420,20 +1544,20 @@
             <div class="value">Muntinlupa City, PH</div>
           </div>
           <div class="info-item">
-            <div class="label">Degree</div>
-            <div class="value">BS Information Technology</div>
+            <div class="label">Work Setup</div>
+            <div class="value">Remote, flexible hours</div>
           </div>
           <div class="info-item">
-            <div class="label">Role</div>
-            <div class="value">Senior Software Developer</div>
+            <div class="label">Focus</div>
+            <div class="value">AI &middot; React Native &middot; Node.js</div>
           </div>
           <div class="info-item">
             <div class="label">Email</div>
             <div class="value">jaysoniglopas@gmail.com</div>
           </div>
           <div class="info-item">
-            <div class="label">Phone</div>
-            <div class="value">+63 952 550 4319</div>
+            <div class="label">Degree</div>
+            <div class="value">BS Information Technology</div>
           </div>
         </div>
       </div>
@@ -1455,23 +1579,24 @@
       <div class="timeline-item">
         <h3>Senior Software Developer</h3>
         <p class="company">A-TECH IT Solution</p>
+        <p class="period">Aug 2024 &ndash; Present &middot; Remote</p>
         <ul>
-          <li>Develop and maintain mobile applications using React Native for Android and iOS platforms</li>
-          <li>Handle both front-end and back-end development, ensuring seamless integration</li>
-          <li>Monitor server performance and maintain the stability of existing applications</li>
-          <li>Conduct quality assurance testing, identify bugs, and create detailed test cases</li>
-          <li>Built and enhanced mobile and web-based admin dashboards for user and content management</li>
-          <li>Implemented core features: user authentication, real-time messaging, interactive UIs</li>
+          <li>Built Tomo AI, an in-app AI assistant: React Native chat UI, Node.js Socket.IO backend, Google Gemini 2.5 Flash</li>
+          <li>Developed Tomodachi, a React Native / Expo real-time social and commerce app with 200+ Socket.IO features</li>
+          <li>Owned front-end and back-end work: REST APIs, webhooks, OAuth (Google Sign-In), MySQL / PostgreSQL</li>
+          <li>Deployed and monitored Node.js services on AWS EC2 (Linux) to keep production apps stable</li>
+          <li>Ran QA testing, wrote test cases, and tracked down bugs before release</li>
         </ul>
       </div>
 
       <div class="timeline-item">
         <h3>Software Developer</h3>
         <p class="company">PIXELMINERS IT Solution</p>
+        <p class="period">May 2020 &ndash; Aug 2024</p>
         <ul>
-          <li>Developed mobile applications including dating and social networking platforms</li>
-          <li>Collaborated on backend integration ensuring smooth client-server communication</li>
-          <li>Contributed to full-cycle software development from design to deployment</li>
+          <li>Developed React Native dating and social networking apps for Android and iOS</li>
+          <li>Built web admin dashboards for user and content management</li>
+          <li>Implemented authentication and real-time messaging with backend integration</li>
         </ul>
       </div>
     </div>
@@ -1490,8 +1615,8 @@
 
     <div class="skills-grid stagger-children">
       <div class="skill-category">
-        <h3>Mobile Development</h3>
-        <p class="skill-desc">Cross-platform apps for Android & iOS</p>
+        <h3>Mobile</h3>
+        <p class="skill-desc">Cross-platform apps for Android &amp; iOS</p>
         <div class="skill-tags">
           <span>React Native</span>
           <span>Android</span>
@@ -1502,54 +1627,58 @@
 
       <div class="skill-category">
         <h3>Frontend</h3>
-        <p class="skill-desc">Building responsive and interactive UIs</p>
+        <p class="skill-desc">Typed, component-driven UIs</p>
         <div class="skill-tags">
-          <span>JavaScript</span>
           <span>React</span>
-          <span>HTML/CSS</span>
+          <span>JavaScript</span>
+          <span>TypeScript</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>Backend & Database</h3>
-        <p class="skill-desc">Server-side logic and data management</p>
+        <h3>Backend &amp; Real-Time</h3>
+        <p class="skill-desc">APIs, events, and integrations</p>
         <div class="skill-tags">
-          <span>Django</span>
+          <span>Node.js</span>
+          <span>Express</span>
+          <span>Socket.IO</span>
+          <span>WebSockets</span>
+          <span>REST APIs</span>
+          <span>Webhooks</span>
+          <span>OAuth (Google Sign-In)</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>AI &amp; LLM</h3>
+        <p class="skill-desc">Production LLM features</p>
+        <div class="skill-tags">
+          <span>Google Gemini API</span>
+          <span>LLM Integration</span>
+          <span>Prompt Engineering</span>
           <span>Python</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h3>Data &amp; Cloud</h3>
+        <p class="skill-desc">Storage and deployment</p>
+        <div class="skill-tags">
           <span>MySQL</span>
-          <span>REST API</span>
-        </div>
-      </div>
-
-      <div class="skill-category">
-        <h3>Real-Time & Cloud</h3>
-        <p class="skill-desc">Live communication and infrastructure</p>
-        <div class="skill-tags">
-          <span>Socket.io</span>
-          <span>Firebase</span>
+          <span>PostgreSQL</span>
           <span>AWS EC2</span>
-          <span>PuTTY</span>
+          <span>Linux</span>
         </div>
       </div>
 
       <div class="skill-category">
-        <h3>DevOps & Tools</h3>
-        <p class="skill-desc">Version control and deployment</p>
+        <h3>Testing &amp; Tools</h3>
+        <p class="skill-desc">Quality and version control</p>
         <div class="skill-tags">
-          <span>GitHub</span>
-          <span>Git</span>
-          <span>Server Management</span>
-        </div>
-      </div>
-
-      <div class="skill-category">
-        <h3>Soft Skills</h3>
-        <p class="skill-desc">Collaboration and professional growth</p>
-        <div class="skill-tags">
-          <span>Leadership</span>
+          <span>Jest</span>
           <span>QA Testing</span>
-          <span>Time Management</span>
-          <span>Adaptability</span>
+          <span>Git</span>
+          <span>GitHub</span>
         </div>
       </div>
     </div>
@@ -1566,92 +1695,192 @@
       <p class="section-subtitle">Real-world applications I've designed, developed, and shipped.</p>
     </div>
 
-    <!-- Tomodachi -->
+    <!--
+      Each project has:
+        - a motion graphic:   media/projects/<id>.mp4  (rendered with HyperFrames from videos/<id>-motion/)
+        - screenshot slots:   images/projects/<id>-<n>.png  (drop a file in with that name and it appears;
+                              missing files show a dashed placeholder)
+    -->
+
+    <!-- Tomo AI -->
     <div class="project-card fade-in">
       <div class="project-header">
-        <h3>Tomodachi Social Community Platform</h3>
-        <span class="project-badge">Featured Project</span>
+        <h3>Tomo AI &mdash; In-App AI Assistant</h3>
+        <span class="project-badge">AI / LLM</span>
+      </div>
+      <div class="project-motion">
+        <video autoplay muted loop playsinline preload="metadata" poster="media/projects/tomo-ai.jpg"
+               aria-label="Motion graphic of Tomo AI features: chat UI, Socket.IO backend, rate limiting, conversation memory, guardrails, cited sources">
+          <source src="media/projects/tomo-ai.mp4" type="video/mp4">
+        </video>
+        <div class="motion-fallback"><strong>Motion graphic</strong>media/projects/tomo-ai.mp4</div>
       </div>
       <p class="project-desc">
-        A full-featured social community platform connecting users with local restaurants, rewards, and each other.
-        Includes a mobile app, admin dashboard, and real-time messaging system.
+        An AI assistant built into the Tomodachi app. A React Native chat UI talks to a Node.js Socket.IO backend,
+        which calls Google Gemini 2.5 Flash.
       </p>
+      <ul class="project-features single">
+        <li>Server-side API key proxy with per-user authentication and rate limiting, so no key ships in the app</li>
+        <li>20-turn conversation memory and an engineered system prompt with guardrails</li>
+        <li>Google Search grounding that returns answers with cited sources</li>
+      </ul>
       <div class="project-tech">
         <span>React Native</span>
-        <span>Django</span>
-        <span>MySQL</span>
-        <span>Socket.io</span>
-        <span>Firebase</span>
-        <span>AWS EC2</span>
-        <span>REST API</span>
+        <span>Node.js</span>
+        <span>Socket.IO</span>
+        <span>Google Gemini API</span>
+        <span>Prompt Engineering</span>
       </div>
-      <ul class="project-features">
-        <li>Social feed with posts, likes, comments, and shares</li>
-        <li>Restaurant discovery with favorites and categories</li>
-        <li>User profiles with verification and rewards system</li>
-        <li>TomoPoints & TomoCoins reward economy</li>
-        <li>Real-time chat with image messaging</li>
-        <li>Business profiles and reservation system</li>
-        <li>Push notifications and in-app purchases</li>
-        <li>Full admin dashboard for content management</li>
-      </ul>
       <div class="screenshot-gallery">
         <div class="screenshot-item">
-          <img src="images/01.png" alt="Tomodachi - Restaurant Discovery">
-          <div class="screenshot-caption">Restaurant Discovery</div>
+          <div class="shot-slot"><img src="images/projects/tomo-ai-1.png" alt="Tomo AI - Chat screen" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-1.png</div></div>
+          <div class="screenshot-caption">Chat Screen</div>
         </div>
         <div class="screenshot-item">
-          <img src="images/02.png" alt="Tomodachi - Social Feed">
-          <div class="screenshot-caption">Social Feed</div>
+          <div class="shot-slot"><img src="images/projects/tomo-ai-2.png" alt="Tomo AI - Answer with cited sources" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-2.png</div></div>
+          <div class="screenshot-caption">Cited Sources</div>
         </div>
         <div class="screenshot-item">
-          <img src="images/03.png" alt="Tomodachi - User Profile">
-          <div class="screenshot-caption">User Profiles</div>
-        </div>
-        <div class="screenshot-item">
-          <img src="images/04.png" alt="Tomodachi - Community Posts">
-          <div class="screenshot-caption">Community Posts</div>
-        </div>
-        <div class="screenshot-item">
-          <img src="images/05.png" alt="Tomodachi - Dashboard & Rewards">
-          <div class="screenshot-caption">Dashboard & Rewards</div>
+          <div class="shot-slot"><img src="images/projects/tomo-ai-3.png" alt="Tomo AI - Conversation memory" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-3.png</div></div>
+          <div class="screenshot-caption">Conversation Memory</div>
         </div>
       </div>
     </div>
 
-    <!-- Japanese Social App -->
+    <!-- Tomodachi -->
     <div class="project-card fade-in">
       <div class="project-header">
-        <h3>Japanese Social Networking App</h3>
-        <span class="project-badge">Mobile App</span>
+        <h3>Tomodachi &mdash; Real-Time Social &amp; Commerce App</h3>
+        <span class="project-badge">Featured Project</span>
+      </div>
+      <div class="project-motion">
+        <video autoplay muted loop playsinline preload="metadata" poster="media/projects/tomodachi.jpg"
+               aria-label="Motion graphic of Tomodachi features: group chat, live streaming, leaderboards, store orders, bookings, push notifications">
+          <source src="media/projects/tomodachi.mp4" type="video/mp4">
+        </video>
+        <div class="motion-fallback"><strong>Motion graphic</strong>media/projects/tomodachi.mp4</div>
       </div>
       <p class="project-desc">
-        A social networking and community platform built for the Japanese market. Features user discovery,
-        profile management, messaging, and location-based connections.
+        A React Native / Expo app that combines social features and commerce in one place, running on more than
+        200 Socket.IO real-time features.
       </p>
+      <ul class="project-features single">
+        <li>Chat and group chat, plus RTMP live streaming from PC with OBS automation</li>
+        <li>Games and leaderboards, in-app purchases, store orders, and restaurant and hotel bookings</li>
+        <li>Push notifications and Google Sign-In</li>
+      </ul>
+      <div class="project-tech">
+        <span>React Native</span>
+        <span>Expo</span>
+        <span>Node.js</span>
+        <span>Socket.IO</span>
+        <span>OAuth (Google Sign-In)</span>
+        <span>AWS EC2</span>
+      </div>
+      <div class="screenshot-gallery">
+        <div class="screenshot-item">
+          <img src="images/projects/tomodachi-1.jpg" alt="Tomodachi - TomoHub home with promos, nearby, bookings and restaurant categories" loading="lazy">
+          <div class="screenshot-caption">TomoHub &amp; Bookings</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="images/projects/tomodachi-2.jpg" alt="Tomodachi - Explore tab with trending hashtags and livestream replays" loading="lazy">
+          <div class="screenshot-caption">Explore &amp; Live Replays</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="images/projects/tomodachi-3.jpg" alt="Tomodachi - Community groups" loading="lazy">
+          <div class="screenshot-caption">Community Groups</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="images/projects/tomodachi-4.jpg" alt="Tomodachi - Social feed post" loading="lazy">
+          <div class="screenshot-caption">Social Feed</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="images/projects/tomodachi-5.jpg" alt="Tomodachi - Profile with TomoPoints, TomoCoins and Go Live" loading="lazy">
+          <div class="screenshot-caption">Profile, Rewards &amp; Go Live</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chatter -->
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <h3>Chatter &mdash; Messaging App</h3>
+        <span class="project-badge">TypeScript</span>
+      </div>
+      <div class="project-motion">
+        <video autoplay muted loop playsinline preload="metadata" poster="media/projects/chatter.jpg"
+               aria-label="Motion graphic of Chatter features: conversation list, messaging with read receipts, TypeScript types, Jest, ESLint and Prettier checks">
+          <source src="media/projects/chatter.mp4" type="video/mp4">
+        </video>
+        <div class="motion-fallback"><strong>Motion graphic</strong>media/projects/chatter.mp4</div>
+      </div>
+      <p class="project-desc">
+        A messaging app written in React Native and TypeScript, with automated tests and enforced code style.
+      </p>
+      <ul class="project-features single">
+        <li>Fully typed React Native codebase in TypeScript</li>
+        <li>Unit tests with Jest</li>
+        <li>Consistent code quality with ESLint and Prettier</li>
+      </ul>
+      <div class="project-tech">
+        <span>React Native</span>
+        <span>TypeScript</span>
+        <span>Jest</span>
+        <span>ESLint</span>
+        <span>Prettier</span>
+      </div>
+      <div class="screenshot-gallery">
+        <div class="screenshot-item">
+          <div class="shot-slot"><img src="images/projects/chatter-1.png" alt="Chatter - Conversations" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/chatter-1.png</div></div>
+          <div class="screenshot-caption">Conversations</div>
+        </div>
+        <div class="screenshot-item">
+          <div class="shot-slot"><img src="images/projects/chatter-2.png" alt="Chatter - Chat thread" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/chatter-2.png</div></div>
+          <div class="screenshot-caption">Chat Thread</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dating & Social -->
+    <div class="project-card fade-in">
+      <div class="project-header">
+        <h3>Dating App &amp; Social Networking Platform</h3>
+        <span class="project-badge">Mobile + Web</span>
+      </div>
+      <div class="project-motion">
+        <video autoplay muted loop playsinline preload="metadata" poster="media/projects/social-dating.jpg"
+               aria-label="Motion graphic of dating and social app features: authentication, matching, real-time messaging, web admin dashboard">
+          <source src="media/projects/social-dating.mp4" type="video/mp4">
+        </video>
+        <div class="motion-fallback"><strong>Motion graphic</strong>media/projects/social-dating.mp4</div>
+      </div>
+      <p class="project-desc">
+        React Native dating and social networking apps for Android and iOS, each with a web admin dashboard.
+      </p>
+      <ul class="project-features single">
+        <li>User authentication and profile management</li>
+        <li>Real-time messaging between users</li>
+        <li>Web admin dashboards for user and content management</li>
+      </ul>
       <div class="project-tech">
         <span>React Native</span>
         <span>JavaScript</span>
+        <span>React</span>
+        <span>REST APIs</span>
         <span>MySQL</span>
-        <span>REST API</span>
-        <span>Firebase</span>
       </div>
-      <ul class="project-features">
-        <li>User discovery with location-based search</li>
-        <li>Rich profile management with photos and settings</li>
-        <li>Messaging and call features</li>
-        <li>Points-based engagement system</li>
-        <li>Age verification and content moderation</li>
-        <li>Recommended users and favorites</li>
-      </ul>
       <div class="screenshot-gallery">
         <div class="screenshot-item">
-          <img src="images/1039c968-4272-470e-a782-afce4a537f71.jpeg" alt="Japanese Social App - User Discovery">
+          <img src="images/1039c968-4272-470e-a782-afce4a537f71.jpeg" alt="Social App - User Discovery" loading="lazy">
           <div class="screenshot-caption">User Discovery</div>
         </div>
         <div class="screenshot-item">
-          <img src="images/43433ab3-6124-40d8-929d-61164eb6d031.jpeg" alt="Japanese Social App - Profile Dashboard">
+          <img src="images/43433ab3-6124-40d8-929d-61164eb6d031.jpeg" alt="Social App - Profile Dashboard" loading="lazy">
           <div class="screenshot-caption">Profile Dashboard</div>
+        </div>
+        <div class="screenshot-item">
+          <div class="shot-slot"><img src="images/projects/social-dating-1.png" alt="Admin dashboard" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/social-dating-1.png</div></div>
+          <div class="screenshot-caption">Admin Dashboard</div>
         </div>
       </div>
     </div>
@@ -1674,63 +1903,18 @@
         <p class="school">Pamantasan ng Lungsod ng Muntinlupa</p>
         <p class="year">2015 - 2021</p>
       </div>
-      <div class="education-card">
-        <p class="degree">Secondary Education</p>
-        <p class="school">Muntinlupa National High School</p>
-        <p class="year">2011 - 2015</p>
-      </div>
-      <div class="education-card">
-        <p class="degree">Primary Education</p>
-        <p class="school">Muntinlupa Elementary School</p>
-        <p class="year">2005 - 2011</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- QUALITIES -->
-<section style="background: rgba(15, 23, 42, 0.5);">
-  <div class="section-inner">
-    <div class="fade-in">
-      <p class="section-label">What I bring</p>
-      <h2 class="section-title">Professional Qualities</h2>
-      <div class="section-divider"></div>
-      <p class="section-subtitle">Beyond technical skills, these are the traits I bring to every team and project.</p>
-    </div>
-
-    <div class="qualities-grid stagger-children">
-      <div class="quality-card">
-        <div class="quality-icon">&#9889;</div>
-        <h4>Fast Learner</h4>
-        <p>Quickly adapts to new technologies, frameworks, and business requirements</p>
-      </div>
-      <div class="quality-card">
-        <div class="quality-icon">&#127919;</div>
-        <h4>Results-Driven</h4>
-        <p>Strong sense of ownership with the ability to deliver under pressure</p>
-      </div>
-      <div class="quality-card">
-        <div class="quality-icon">&#129309;</div>
-        <h4>Team Player</h4>
-        <p>Excellent communication and collaboration with teammates, superiors, and clients</p>
-      </div>
-      <div class="quality-card">
-        <div class="quality-icon">&#128200;</div>
-        <h4>Continuous Improvement</h4>
-        <p>Passionate and proactive, always striving for better solutions and excellence</p>
-      </div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact">
+<section id="contact" style="background: rgba(15, 23, 42, 0.5);">
   <div class="section-inner">
     <div class="fade-in">
       <p class="section-label">Let's connect</p>
       <h2 class="section-title">Get In Touch</h2>
       <div class="section-divider"></div>
-      <p class="section-subtitle">I'm always open to discussing new projects and opportunities.</p>
+      <p class="section-subtitle">Open to remote React Native, Full-Stack, and AI Engineer roles with flexible hours.</p>
     </div>
 
     <div class="contact-grid stagger-children">
@@ -1742,17 +1926,24 @@
         </div>
       </div>
       <div class="contact-card">
-        <div class="contact-icon">&#128222;</div>
+        <div class="contact-icon">in</div>
         <div>
-          <p class="contact-label">Phone</p>
-          <p class="contact-value"><a href="tel:+639602189657">+63 952 550 4319</a></p>
+          <p class="contact-label">LinkedIn</p>
+          <p class="contact-value"><a href="https://www.linkedin.com/in/jayson-iglopas-a18815245" target="_blank" rel="noopener">jayson-iglopas-a18815245</a></p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">&#8615;</div>
+        <div>
+          <p class="contact-label">Resume</p>
+          <p class="contact-value"><a href="Jayson_Iglopas_CV.pdf" download>Download CV (PDF)</a></p>
         </div>
       </div>
       <div class="contact-card">
         <div class="contact-icon">&#128205;</div>
         <div>
           <p class="contact-label">Location</p>
-          <p class="contact-value">Muntinlupa City, Philippines</p>
+          <p class="contact-value">Muntinlupa City, PH &middot; Remote</p>
         </div>
       </div>
     </div>
@@ -1791,6 +1982,34 @@
 
   document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .stagger-children').forEach(el => {
     observer.observe(el);
+  });
+
+  // Screenshot slots: show the dashed placeholder until the image file exists
+  document.querySelectorAll('.shot-slot img').forEach(img => {
+    const markEmpty = () => img.parentElement.classList.add('empty');
+    if (img.complete && img.naturalWidth === 0) markEmpty();
+    img.addEventListener('error', markEmpty);
+  });
+
+  // Project motion graphics: placeholder if the MP4 is missing, play only while on screen,
+  // and stay paused for visitors who prefer reduced motion
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting && !reduceMotion) video.play().catch(() => {});
+      else video.pause();
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll('.project-motion video').forEach(video => {
+    const source = video.querySelector('source');
+    source.addEventListener('error', () => video.parentElement.classList.add('empty'));
+    if (reduceMotion) {
+      video.removeAttribute('autoplay');
+      video.pause();
+    }
+    videoObserver.observe(video);
   });
 
   // Navbar scroll effect + active link highlighting

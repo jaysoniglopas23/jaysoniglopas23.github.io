@@ -1,0 +1,28 @@
+{
+  "category": "webpage",
+  "category_note": "UI/feature showcase treated as a form category: no search, invented schematic UI drawn in HTML/CSS/SVG",
+  "duration_s": 12,
+  "fps": 30,
+  "canvas": { "w": 1280, "h": 720, "aspect": "16:9" },
+  "style": "calm, professional product showcase; dark navy with sky/indigo/violet accents; seamless loop",
+  "palette": ["#050d1a", "#0f172a", "#e2e8f0", "#94a3b8", "#38bdf8", "#818cf8", "#c084fc"],
+  "font": "Inter",
+  "beats": [0, 3, 6, 9],
+  "export": "mp4",
+  "asset_needs": [],
+  "block": null,
+  "customize": {
+    "reuse_note": "Catalog searched (chat-message, message-thread-reveal, code-highlight, mk-progress-stat). Motion language borrowed (chat-message 0.75 scale pop from sender corner, code-highlight band sweep, progress-track fill); hand-authored inside one shared phone mockup so all 4 project pieces match."
+  },
+  "content": {
+    "project": "Chatter",
+    "layout": "left 40% phone mockup, right 60% eyebrow + title + line + chips, progress dots, project name top-left",
+    "scenes": [
+      { "id": "b1", "start": 0, "end": 3, "feature": "Conversations list", "motion": "rows slide in staggered, unread badges odometer-count" },
+      { "id": "b2", "start": 3, "end": 6, "feature": "Messaging", "motion": "input types, bubble pops from send corner, sent/delivered/read ticks draw" },
+      { "id": "b3", "start": 6, "end": 9, "feature": "TypeScript", "motion": "type card field bands sweep, matching bubble parts outline, 0 errors pill" },
+      { "id": "b4", "start": 9, "end": 12, "feature": "Quality tooling", "motion": "Jest bar to 100%, ESLint and Prettier checks tick green, return to rest state for loop" }
+    ],
+    "loop": "rest state R = Feature 01 text + Chats header with rows hidden; t=0 and t=12 both show R"
+  }
+}

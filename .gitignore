@@ -3,3 +3,20 @@
 
 # Source checkout of the YES site (separate repo: yesltd.git) — site files live at repo root
 YES_corporate_site_final/
+
+# Never commit secrets or signing keys
+.env
+.env.*
+*.keystore
+*.jks
+*.p12
+*.pem
+
+# HyperFrames motion sources: keep compositions, skip build output (final MP4s live in media/projects/)
+videos/**/node_modules/
+videos/**/renders/
+videos/**/.hyperframes/
+videos/**/.media/cache/
+
+# Raw phone screenshots (unredacted) — only the redacted web copies in images/projects/ are published
+images/IMG_*

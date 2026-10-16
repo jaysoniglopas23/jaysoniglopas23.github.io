@@ -1,0 +1,20 @@
+{
+  "category": "webpage",
+  "duration_s": 12,
+  "fps": 30,
+  "canvas": { "w": 1280, "h": 720, "aspect": "16:9" },
+  "style": "Dark portfolio palette, schematic phone UI feature showcase, seamless loop",
+  "palette": ["#38bdf8", "#818cf8", "#c084fc", "#e2e8f0", "#94a3b8", "#0f172a", "#050d1a"],
+  "font": "Inter",
+  "beats": [0, 3, 6, 9, 12],
+  "export": "mp4",
+  "asset_needs": [],
+  "content": {
+    "scenes": [
+      { "id": "auth", "start": 0, "end": 3, "text": "Authentication", "motion": "fields type in, button press, check draws" },
+      { "id": "discover", "start": 3, "end": 6, "text": "Discover & match", "motion": "cards swipe left/right, match burst" },
+      { "id": "chat", "start": 6, "end": 9, "text": "Real-time messaging", "motion": "bubbles arrive, typing indicator" },
+      { "id": "admin", "start": 9, "end": 12, "text": "Web admin dashboard", "motion": "phone morphs to browser, rows stagger, bars grow; morph back to t=0 state" }
+    ]
+  }
+}

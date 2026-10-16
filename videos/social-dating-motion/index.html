@@ -1,0 +1,1224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <title>Dating App Feature Loop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --bg: #050d1a;
+        --surface: #0f172a;
+        --surface-a: rgba(15, 23, 42, 0.8);
+        --screen: #0b1324;
+        --bezel: #1e293b;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --sky: #38bdf8;
+        --indigo: #818cf8;
+        --violet: #c084fc;
+        --line: rgba(56, 189, 248, 0.15);
+        --ink: #050d1a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        color: var(--text);
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+      }
+      /* background layer */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      #glow-a {
+        width: 760px;
+        height: 760px;
+        left: -200px;
+        top: -120px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0) 65%);
+      }
+      #glow-b {
+        width: 820px;
+        height: 820px;
+        left: 620px;
+        top: 120px;
+        background: radial-gradient(circle, rgba(129, 140, 248, 0.14), rgba(129, 140, 248, 0) 65%);
+      }
+      #grid-lines {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+        background-size: 64px 64px;
+      }
+      #brand {
+        position: absolute;
+        left: 48px;
+        top: 34px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 0.01em;
+      }
+      #brand-mark {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, var(--sky), var(--violet));
+      }
+      #brand span.sub {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* left column: device */
+      #left {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 540px;
+        height: 720px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 30px;
+      }
+      #device {
+        position: relative;
+        width: 264px;
+        height: 540px;
+        border-radius: 42px;
+        background: var(--bezel);
+        box-shadow:
+          0 30px 80px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(56, 189, 248, 0.18),
+          0 0 60px rgba(56, 189, 248, 0.12);
+      }
+      #screen {
+        position: absolute;
+        top: 9px;
+        left: 9px;
+        right: 9px;
+        bottom: 9px;
+        border-radius: 34px;
+        background: var(--screen);
+        overflow: hidden;
+      }
+      #notch {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        margin-left: -42px;
+        width: 84px;
+        height: 22px;
+        border-radius: 12px;
+        background: #000;
+        z-index: 20;
+      }
+      .view {
+        position: absolute;
+        inset: 0;
+      }
+      .phone-view {
+        padding: 52px 20px 22px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* login */
+      #login {
+        align-items: stretch;
+        gap: 10px;
+      }
+      #login-logo {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--sky), var(--violet));
+        align-self: center;
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #login-title {
+        font-size: 22px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 8px;
+      }
+      #login-sub {
+        font-size: 14px;
+        color: var(--muted);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .field-label {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .field {
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        overflow: hidden;
+      }
+      .type-wrap {
+        overflow: hidden;
+        white-space: nowrap;
+        width: 0px;
+        font-size: 15px;
+        color: var(--text);
+      }
+      #pw-wrap {
+        letter-spacing: 3px;
+      }
+      .caret {
+        width: 2px;
+        height: 18px;
+        background: var(--sky);
+        margin-left: 2px;
+        opacity: 0;
+      }
+      #btn-signin {
+        margin-top: 14px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(90deg, var(--sky), var(--indigo));
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      #login-foot {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+        margin-top: 8px;
+      }
+      #login-success {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background: rgba(11, 19, 36, 0.92);
+        opacity: 0;
+      }
+      #check-badge {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--sky), var(--indigo));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px rgba(56, 189, 248, 0.45);
+      }
+      #success-text {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      /* discover */
+      #discover {
+        opacity: 0;
+        gap: 12px;
+      }
+      .screen-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .pill {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--sky);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+      #card-stack {
+        position: relative;
+        height: 330px;
+      }
+      .pcard {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 320px;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+      }
+      #card-c {
+        background: linear-gradient(160deg, #1e3a5f, #0f172a);
+      }
+      #card-b {
+        background: linear-gradient(160deg, #3b2a6b, #0f172a);
+      }
+      #card-d {
+        background: linear-gradient(160deg, #1f3f4d, #0f172a);
+      }
+      .pcard svg.sil {
+        position: absolute;
+        left: 50%;
+        margin-left: -70px;
+        bottom: 64px;
+      }
+      .pcard-info {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 14px 16px;
+        background: linear-gradient(0deg, rgba(5, 13, 26, 0.95), rgba(5, 13, 26, 0));
+      }
+      .pcard-name {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .pcard-meta {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .stamp {
+        position: absolute;
+        top: 22px;
+        padding: 4px 12px;
+        border-radius: 8px;
+        border: 3px solid;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        opacity: 0;
+      }
+      .stamp.nope {
+        right: 18px;
+        color: var(--muted);
+        border-color: var(--muted);
+      }
+      .stamp.like {
+        left: 18px;
+        color: var(--sky);
+        border-color: var(--sky);
+      }
+      #swipe-btns {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+      }
+      .sbtn {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #match {
+        position: absolute;
+        inset: 0;
+        background: rgba(5, 13, 26, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        opacity: 0;
+        z-index: 10;
+      }
+      #match-avatars {
+        position: relative;
+        width: 180px;
+        height: 96px;
+      }
+      .mav {
+        position: absolute;
+        top: 0;
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        border: 3px solid var(--sky);
+        background: linear-gradient(160deg, #1e3a5f, #0f172a);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        overflow: hidden;
+      }
+      #mav-a {
+        left: 0;
+      }
+      #mav-b {
+        right: 0;
+        border-color: var(--violet);
+        background: linear-gradient(160deg, #3b2a6b, #0f172a);
+      }
+      .ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 120px;
+        height: 120px;
+        margin: -60px 0 0 -60px;
+        border-radius: 50%;
+        border: 2px solid var(--violet);
+        opacity: 0;
+      }
+      .spark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        margin: -4px 0 0 -4px;
+        border-radius: 50%;
+        opacity: 0;
+      }
+      #match-title {
+        font-size: 28px;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--sky), var(--violet));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      #match-sub {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      #match-cta {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink);
+        background: var(--sky);
+        padding: 9px 18px;
+        border-radius: 12px;
+      }
+
+      /* chat */
+      #chat {
+        opacity: 0;
+        padding: 46px 0 0;
+      }
+      #chat-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      #chat-av {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(160deg, #6d4fc2, #1e1b4b);
+        border: 2px solid var(--violet);
+      }
+      #chat-name {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      #chat-status {
+        font-size: 12px;
+        color: var(--sky);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      #online-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--sky);
+      }
+      #chat-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 14px;
+      }
+      .chat-day {
+        align-self: center;
+        font-size: 11px;
+        color: var(--muted);
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 3px 10px;
+      }
+      .bubble {
+        max-width: 78%;
+        font-size: 15px;
+        line-height: 1.35;
+        padding: 9px 13px;
+        border-radius: 16px;
+        opacity: 0;
+      }
+      .bubble.in {
+        align-self: flex-start;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-bottom-left-radius: 5px;
+      }
+      .bubble.out {
+        align-self: flex-end;
+        background: linear-gradient(135deg, var(--sky), var(--indigo));
+        color: var(--ink);
+        font-weight: 500;
+        border-bottom-right-radius: 5px;
+      }
+      #typing {
+        align-self: flex-start;
+        display: flex;
+        gap: 5px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border-bottom-left-radius: 5px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        opacity: 0;
+      }
+      .tdot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--muted);
+      }
+      #chat-input {
+        margin: 0 12px 14px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 6px 0 16px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      #send {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--sky);
+      }
+
+      /* admin browser */
+      #admin {
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      #b-top {
+        height: 34px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 12px;
+        background: #111c33;
+        border-bottom: 1px solid var(--line);
+      }
+      .bdot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #334155;
+      }
+      #b-url {
+        margin-left: 14px;
+        flex: 1;
+        height: 20px;
+        border-radius: 6px;
+        background: var(--surface);
+        font-size: 11px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+      }
+      #b-body {
+        flex: 1;
+        display: flex;
+      }
+      #b-side {
+        width: 112px;
+        background: #0c1528;
+        border-right: 1px solid var(--line);
+        padding: 14px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .side-item {
+        font-size: 12px;
+        color: var(--muted);
+        padding: 6px 8px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .side-item i {
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        background: #334155;
+      }
+      .side-item.active {
+        background: rgba(56, 189, 248, 0.12);
+        color: var(--text);
+      }
+      .side-item.active i {
+        background: var(--sky);
+      }
+      #b-main {
+        flex: 1;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      #b-stats {
+        display: flex;
+        gap: 10px;
+      }
+      .stat {
+        flex: 1;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .stat-val {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      #b-mid {
+        display: flex;
+        gap: 10px;
+        height: 92px;
+      }
+      #chart {
+        flex: 1;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: flex-end;
+        gap: 7px;
+      }
+      .bar {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        background: linear-gradient(0deg, var(--indigo), var(--sky));
+        transform-origin: 50% 100%;
+      }
+      #table {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .trow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        padding: 6px 10px;
+        border-top: 1px solid rgba(56, 189, 248, 0.08);
+      }
+      .trow.th {
+        border-top: 0;
+        color: var(--muted);
+        background: #111c33;
+        font-size: 11px;
+      }
+      .trow .tav {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #334155;
+      }
+      .trow .tname {
+        flex: 1;
+      }
+      .tag {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        color: var(--sky);
+        background: rgba(56, 189, 248, 0.12);
+      }
+      .tag.pend {
+        color: var(--violet);
+        background: rgba(192, 132, 252, 0.14);
+      }
+
+      /* right column */
+      #right {
+        position: absolute;
+        left: 590px;
+        top: 0;
+        width: 620px;
+        height: 720px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 34px;
+        padding-top: 30px;
+      }
+      #rule {
+        width: 120px;
+        height: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, var(--sky), var(--violet));
+        transform-origin: 0 50%;
+      }
+      #copy {
+        display: grid;
+      }
+      .copy-group {
+        grid-area: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .eyebrow {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        color: var(--sky);
+        text-transform: uppercase;
+      }
+      .ftitle {
+        font-size: 58px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+      .fbody {
+        font-size: 28px;
+        line-height: 1.4;
+        color: var(--muted);
+        max-width: 620px;
+      }
+      #dots {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pdot {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: #334155;
+      }
+      #pdot-1 {
+        width: 40px;
+        background: var(--sky);
+      }
+      #chips {
+        display: flex;
+        gap: 12px;
+      }
+      .chip {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface-a);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1280"
+      data-height="720"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="12" data-track-index="0">
+        <div id="grid-lines"></div>
+        <div id="glow-a" class="glow"></div>
+        <div id="glow-b" class="glow"></div>
+
+        <div id="brand">
+          <div id="brand-mark"></div>
+          Dating App <span class="sub">&amp; Social Platform</span>
+        </div>
+
+        <!-- LEFT: device -->
+        <div id="left">
+          <div id="device">
+            <div id="notch"></div>
+            <div id="screen">
+              <!-- 01 login -->
+              <div id="login" class="view phone-view" data-layout-allow-occlusion="true">
+                <div id="login-logo">
+                  <svg width="28" height="26" viewBox="0 0 28 26">
+                    <path
+                      d="M14 25 C 4 17 1 12 1 7.5 A 6.5 6.5 0 0 1 14 5 A 6.5 6.5 0 0 1 27 7.5 C 27 12 24 17 14 25 Z"
+                      fill="#050d1a"
+                    />
+                  </svg>
+                </div>
+                <div id="login-title">Welcome back</div>
+                <div id="login-sub">Sign in to continue</div>
+                <div class="field-label">Email</div>
+                <div class="field">
+                  <div id="email-wrap" class="type-wrap">user.a@example.com</div>
+                  <div id="caret-1" class="caret"></div>
+                </div>
+                <div class="field-label">Password</div>
+                <div class="field">
+                  <div id="pw-wrap" class="type-wrap">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</div>
+                  <div id="caret-2" class="caret"></div>
+                </div>
+                <div id="btn-signin">Sign in</div>
+                <div id="login-foot">New here? Create account</div>
+                <div id="login-success">
+                  <div id="check-badge">
+                    <svg width="44" height="44" viewBox="0 0 44 44">
+                      <path
+                        id="check-path"
+                        d="M11 23 L19 31 L34 14"
+                        fill="none"
+                        stroke="#050d1a"
+                        stroke-width="5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-dasharray="40"
+                        stroke-dashoffset="40"
+                      />
+                    </svg>
+                  </div>
+                  <div id="success-text">Signed in</div>
+                </div>
+              </div>
+
+              <!-- 02 discover -->
+              <div id="discover" class="view phone-view" data-layout-allow-overlap="true" data-layout-allow-occlusion="true" data-layout-allow-overflow="true">
+                <div class="screen-head">Discover <span class="pill">Nearby</span></div>
+                <div id="card-stack" data-layout-allow-overlap="true" data-layout-allow-occlusion="true">
+                  <div id="card-d" class="pcard">
+                    <svg class="sil" width="140" height="150" viewBox="0 0 140 150">
+                      <circle cx="70" cy="48" r="32" fill="rgba(226,232,240,0.18)" />
+                      <path d="M10 150 C 14 104 40 88 70 88 C 100 88 126 104 130 150 Z" fill="rgba(226,232,240,0.18)" />
+                    </svg>
+                    <div class="pcard-info">
+                      <div class="pcard-name">User D, 27</div>
+                      <div class="pcard-meta">5 km away</div>
+                    </div>
+                  </div>
+                  <div id="card-b" class="pcard">
+                    <svg class="sil" width="140" height="150" viewBox="0 0 140 150">
+                      <circle cx="70" cy="48" r="32" fill="rgba(226,232,240,0.2)" />
+                      <path d="M10 150 C 14 104 40 88 70 88 C 100 88 126 104 130 150 Z" fill="rgba(226,232,240,0.2)" />
+                    </svg>
+                    <div class="pcard-info">
+                      <div class="pcard-name">User B, 26</div>
+                      <div class="pcard-meta">2 km away</div>
+                    </div>
+                    <div id="stamp-like" class="stamp like">LIKE</div>
+                  </div>
+                  <div id="card-c" class="pcard">
+                    <svg class="sil" width="140" height="150" viewBox="0 0 140 150">
+                      <circle cx="70" cy="48" r="32" fill="rgba(226,232,240,0.2)" />
+                      <path d="M10 150 C 14 104 40 88 70 88 C 100 88 126 104 130 150 Z" fill="rgba(226,232,240,0.2)" />
+                    </svg>
+                    <div class="pcard-info">
+                      <div class="pcard-name">User C, 29</div>
+                      <div class="pcard-meta">3 km away</div>
+                    </div>
+                    <div id="stamp-nope" class="stamp nope">NOPE</div>
+                  </div>
+                </div>
+                <div id="swipe-btns">
+                  <div id="btn-x" class="sbtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20">
+                      <path d="M4 4 L16 16 M16 4 L4 16" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                  <div id="btn-heart" class="sbtn">
+                    <svg width="22" height="20" viewBox="0 0 28 26">
+                      <path
+                        d="M14 25 C 4 17 1 12 1 7.5 A 6.5 6.5 0 0 1 14 5 A 6.5 6.5 0 0 1 27 7.5 C 27 12 24 17 14 25 Z"
+                        fill="#38bdf8"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div id="match" data-layout-allow-overlap="true" data-layout-allow-occlusion="true">
+                  <div id="match-avatars">
+                    <div id="ring-1" class="ring"></div>
+                    <div id="ring-2" class="ring"></div>
+                    <div id="spark-0" class="spark"></div>
+                    <div id="spark-1" class="spark"></div>
+                    <div id="spark-2" class="spark"></div>
+                    <div id="spark-3" class="spark"></div>
+                    <div id="spark-4" class="spark"></div>
+                    <div id="spark-5" class="spark"></div>
+                    <div id="spark-6" class="spark"></div>
+                    <div id="spark-7" class="spark"></div>
+                    <div id="mav-a" class="mav">
+                      <svg width="70" height="70" viewBox="0 0 140 150">
+                        <circle cx="70" cy="48" r="32" fill="rgba(226,232,240,0.3)" />
+                        <path d="M10 150 C 14 104 40 88 70 88 C 100 88 126 104 130 150 Z" fill="rgba(226,232,240,0.3)" />
+                      </svg>
+                    </div>
+                    <div id="mav-b" class="mav">
+                      <svg width="70" height="70" viewBox="0 0 140 150">
+                        <circle cx="70" cy="48" r="32" fill="rgba(226,232,240,0.3)" />
+                        <path d="M10 150 C 14 104 40 88 70 88 C 100 88 126 104 130 150 Z" fill="rgba(226,232,240,0.3)" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div id="match-title">It's a Match</div>
+                  <div id="match-sub">You and User B liked each other</div>
+                  <div id="match-cta">Send a message</div>
+                </div>
+              </div>
+
+              <!-- 03 chat -->
+              <div id="chat" class="view phone-view">
+                <div id="chat-head">
+                  <div id="chat-av"></div>
+                  <div>
+                    <div id="chat-name">User B</div>
+                    <div id="chat-status"><span id="online-dot"></span>online</div>
+                  </div>
+                </div>
+                <div id="chat-body">
+                  <div class="chat-day">New match</div>
+                  <div id="msg-1" class="bubble in">Hi! Great to match with you.</div>
+                  <div id="msg-2" class="bubble out">Hey User B! How is your day?</div>
+                  <div id="typing">
+                    <div id="tdot-1" class="tdot"></div>
+                    <div id="tdot-2" class="tdot"></div>
+                    <div id="tdot-3" class="tdot"></div>
+                  </div>
+                  <div id="msg-3" class="bubble in">Good! Coffee this weekend?</div>
+                </div>
+                <div id="chat-input">Message... <div id="send"></div></div>
+              </div>
+
+              <!-- 04 admin -->
+              <div id="admin" class="view">
+                <div id="b-top">
+                  <div class="bdot"></div>
+                  <div class="bdot"></div>
+                  <div class="bdot"></div>
+                  <div id="b-url">admin.example.app/users</div>
+                </div>
+                <div id="b-body">
+                  <div id="b-side">
+                    <div id="side-1" class="side-item"><i></i>Overview</div>
+                    <div id="side-2" class="side-item active"><i></i>Users</div>
+                    <div id="side-3" class="side-item"><i></i>Matches</div>
+                    <div id="side-4" class="side-item"><i></i>Reports</div>
+                  </div>
+                  <div id="b-main">
+                    <div id="b-stats">
+                      <div id="stat-1" class="stat">
+                        <div class="stat-label">Active users</div>
+                        <div id="stat-users" class="stat-val">0</div>
+                      </div>
+                      <div id="stat-2" class="stat">
+                        <div class="stat-label">New matches</div>
+                        <div id="stat-matches" class="stat-val">0</div>
+                      </div>
+                    </div>
+                    <div id="b-mid">
+                      <div id="chart">
+                        <div id="bar-1" class="bar" style="height: 34%"></div>
+                        <div id="bar-2" class="bar" style="height: 52%"></div>
+                        <div id="bar-3" class="bar" style="height: 44%"></div>
+                        <div id="bar-4" class="bar" style="height: 68%"></div>
+                        <div id="bar-5" class="bar" style="height: 60%"></div>
+                        <div id="bar-6" class="bar" style="height: 82%"></div>
+                        <div id="bar-7" class="bar" style="height: 96%"></div>
+                      </div>
+                    </div>
+                    <div id="table">
+                      <div class="trow th"><span class="tname">User</span><span>Status</span></div>
+                      <div id="row-1" class="trow">
+                        <div class="tav"></div>
+                        <span class="tname">User A</span><span class="tag">Active</span>
+                      </div>
+                      <div id="row-2" class="trow">
+                        <div class="tav"></div>
+                        <span class="tname">User B</span><span class="tag">Active</span>
+                      </div>
+                      <div id="row-3" class="trow">
+                        <div class="tav"></div>
+                        <span class="tname">User C</span><span class="tag pend">Review</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: copy -->
+        <div id="right">
+          <div id="rule"></div>
+          <div id="copy">
+            <div id="copy-1" class="copy-group">
+              <div class="eyebrow">Feature 01</div>
+              <div class="ftitle">Authentication</div>
+              <div class="fbody">Sign up and sign in with secure sessions.</div>
+            </div>
+            <div id="copy-2" class="copy-group">
+              <div class="eyebrow">Feature 02</div>
+              <div class="ftitle">Discover &amp; match</div>
+              <div class="fbody">Swipe profiles. A mutual like becomes a match.</div>
+            </div>
+            <div id="copy-3" class="copy-group">
+              <div class="eyebrow">Feature 03</div>
+              <div class="ftitle">Real-time messaging</div>
+              <div class="fbody">Chat opens instantly, with live typing indicators.</div>
+            </div>
+            <div id="copy-4" class="copy-group">
+              <div class="eyebrow">Feature 04</div>
+              <div class="ftitle">Web admin dashboard</div>
+              <div class="fbody">Manage users and track activity on the web.</div>
+            </div>
+          </div>
+          <div id="dots">
+            <div id="pdot-1" class="pdot"></div>
+            <div id="pdot-2" class="pdot"></div>
+            <div id="pdot-3" class="pdot"></div>
+            <div id="pdot-4" class="pdot"></div>
+          </div>
+          <div id="chips">
+            <div class="chip">React Native</div>
+            <div class="chip">Android &amp; iOS</div>
+            <div class="chip">Web admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const C = {
+        sky: "#38bdf8",
+        violet: "#c084fc",
+        indigo: "#818cf8",
+        dotOff: "#334155",
+      };
+      const tl = gsap.timeline({ paused: true });
+
+      // ---------- ambient (returns to start at t=12) ----------
+      tl.fromTo("#glow-a", { x: 0, y: 0 }, { x: 60, y: 30, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+      tl.fromTo("#glow-b", { x: 0, y: 0 }, { x: -50, y: -40, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+
+      // ---------- copy groups ----------
+      const copyIn = (sel, t) =>
+        tl.fromTo(sel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out" }, t);
+      const copyOut = (sel, t) =>
+        tl.fromTo(sel, { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -16, duration: 0.3, ease: "power2.in", immediateRender: false }, t);
+      gsap.set(["#copy-2", "#copy-3", "#copy-4"], { autoAlpha: 0 });
+      copyOut("#copy-1", 2.8);
+      copyIn("#copy-2", 3.05);
+      copyOut("#copy-2", 5.8);
+      copyIn("#copy-3", 6.05);
+      copyOut("#copy-3", 8.8);
+      copyIn("#copy-4", 9.05);
+      copyOut("#copy-4", 11.35);
+      tl.fromTo("#copy-1", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.34, ease: "power3.out", immediateRender: false }, 11.65);
+
+      // rule pulse at each beat change
+      [2.8, 5.8, 8.8, 11.35].forEach((t) => {
+        tl.fromTo("#rule", { scaleX: 1 }, { scaleX: 0.2, duration: 0.25, ease: "power2.in", immediateRender: false }, t);
+        tl.fromTo("#rule", { scaleX: 0.2 }, { scaleX: 1, duration: 0.34, ease: "power3.out", immediateRender: false }, t + 0.3);
+      });
+
+      // progress dots
+      const dotOn = (sel, t) =>
+        tl.fromTo(sel, { width: 12, backgroundColor: C.dotOff }, { width: 40, backgroundColor: C.sky, duration: 0.4, ease: "power2.out", immediateRender: false }, t);
+      const dotOff = (sel, t) =>
+        tl.fromTo(sel, { width: 40, backgroundColor: C.sky }, { width: 12, backgroundColor: C.dotOff, duration: 0.4, ease: "power2.out", immediateRender: false }, t);
+      dotOff("#pdot-1", 2.9); dotOn("#pdot-2", 2.9);
+      dotOff("#pdot-2", 5.9); dotOn("#pdot-3", 5.9);
+      dotOff("#pdot-3", 8.9); dotOn("#pdot-4", 8.9);
+      dotOff("#pdot-4", 11.45); dotOn("#pdot-1", 11.45);
+
+      // ---------- BEAT 1: authentication (0 - 3) ----------
+      tl.fromTo("#caret-1", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.25);
+      tl.fromTo("#email-wrap", { width: 0 }, { width: 152, duration: 0.6, ease: "none" }, 0.3);
+      tl.to("#caret-1", { opacity: 0, duration: 0.05 }, 0.95);
+      tl.fromTo("#caret-2", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 1.0);
+      tl.fromTo("#pw-wrap", { width: 0 }, { width: 100, duration: 0.45, ease: "none" }, 1.05);
+      tl.to("#caret-2", { opacity: 0, duration: 0.05 }, 1.55);
+      tl.fromTo("#btn-signin", { scale: 1 }, { scale: 0.93, duration: 0.12, ease: "power2.in" }, 1.62);
+      tl.to("#btn-signin", { scale: 1, duration: 0.25, ease: "back.out(2)" }, 1.74);
+      tl.fromTo("#login-success", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 1.9);
+      tl.fromTo("#check-badge", { scale: 0.3 }, { scale: 1, duration: 0.45, ease: "back.out(2.2)" }, 1.9);
+      tl.fromTo("#check-path", { strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, 2.1);
+      tl.fromTo("#success-text", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 2.2);
+
+      // transition login -> discover
+      tl.fromTo("#login", { opacity: 1, x: 0 }, { opacity: 0, x: -30, duration: 0.35, ease: "power2.in" }, 2.85);
+      tl.fromTo("#discover", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 3.05);
+      // reset login internals while hidden (it returns at 11.4)
+      tl.set("#email-wrap", { width: 0 }, 4);
+      tl.set("#pw-wrap", { width: 0 }, 4);
+      tl.set("#login-success", { opacity: 0 }, 4);
+      tl.set("#check-badge", { scale: 0.3 }, 4);
+      tl.set("#check-path", { strokeDashoffset: 40 }, 4);
+      tl.set("#success-text", { opacity: 0, y: 8 }, 4);
+      tl.set("#login", { x: 0 }, 4);
+
+      // ---------- BEAT 2: discover & match (3 - 6) ----------
+      gsap.set("#card-b", { y: 8, scale: 0.95 });
+      gsap.set("#card-d", { y: 16, scale: 0.9 });
+      // card C swipes left
+      tl.fromTo("#stamp-nope", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 3.5);
+      tl.fromTo("#btn-x", { scale: 1 }, { scale: 0.85, duration: 0.1, yoyo: true, repeat: 1 }, 3.5);
+      tl.fromTo("#card-c", { x: 0, rotation: 0, opacity: 1 }, { x: -300, rotation: -22, opacity: 0, duration: 0.5, ease: "power2.in" }, 3.55);
+      tl.fromTo("#card-b", { y: 8, scale: 0.95 }, { y: 0, scale: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, 3.8);
+      tl.fromTo("#card-d", { y: 16, scale: 0.9 }, { y: 8, scale: 0.95, duration: 0.35, ease: "power2.out", immediateRender: false }, 3.8);
+      // card B swipes right
+      tl.fromTo("#stamp-like", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 4.25);
+      tl.fromTo("#btn-heart", { scale: 1 }, { scale: 0.85, duration: 0.1, yoyo: true, repeat: 1 }, 4.25);
+      tl.fromTo("#card-b", { x: 0, rotation: 0, opacity: 1 }, { x: 300, rotation: 22, opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, 4.3);
+      // match burst
+      tl.fromTo("#match", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 4.75);
+      tl.fromTo("#mav-a", { x: -60, opacity: 0 }, { x: 10, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 4.8);
+      tl.fromTo("#mav-b", { x: 60, opacity: 0 }, { x: -10, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 4.8);
+      tl.fromTo("#ring-1", { scale: 0.6, opacity: 0.9 }, { scale: 2.2, opacity: 0, duration: 0.8, ease: "power2.out" }, 5.05);
+      tl.fromTo("#ring-2", { scale: 0.6, opacity: 0.7 }, { scale: 2.6, opacity: 0, duration: 0.9, ease: "power2.out" }, 5.2);
+      const sparkCols = [C.sky, C.violet, C.indigo, C.sky, C.violet, C.indigo, C.sky, C.violet];
+      for (let i = 0; i < 8; i++) {
+        const a = (Math.PI * 2 * i) / 8 + 0.3;
+        tl.fromTo(
+          "#spark-" + i,
+          { x: 0, y: 0, opacity: 1, backgroundColor: sparkCols[i] },
+          { x: Math.cos(a) * 110, y: Math.sin(a) * 80, opacity: 0, duration: 0.7, ease: "power3.out" },
+          5.05,
+        );
+      }
+      tl.fromTo("#match-title", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.4)" }, 5.05);
+      tl.fromTo("#match-sub", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 5.2);
+      tl.fromTo("#match-cta", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, 5.3);
+      tl.fromTo("#match-cta", { scale: 1 }, { scale: 0.94, duration: 0.1, yoyo: true, repeat: 1, immediateRender: false }, 5.65);
+
+      // transition discover -> chat
+      tl.fromTo("#discover", { opacity: 1, x: 0 }, { opacity: 0, x: -30, duration: 0.35, ease: "power2.in", immediateRender: false }, 5.85);
+      tl.fromTo("#chat", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 6.05);
+
+      // ---------- BEAT 3: chat (6 - 9) ----------
+      tl.fromTo("#online-dot", { scale: 1 }, { scale: 1.5, duration: 0.4, yoyo: true, repeat: 5, ease: "sine.inOut" }, 6.2);
+      const bubbleIn = (sel, t, fromX) =>
+        tl.fromTo(sel, { opacity: 0, y: 14, x: fromX, scale: 0.92 }, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, t);
+      bubbleIn("#msg-1", 6.45, -10);
+      bubbleIn("#msg-2", 7.05, 10);
+      tl.fromTo("#typing", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, 7.5);
+      ["#tdot-1", "#tdot-2", "#tdot-3"].forEach((s, i) => {
+        tl.fromTo(s, { y: 0 }, { y: -5, duration: 0.18, yoyo: true, repeat: 3, ease: "sine.inOut" }, 7.55 + i * 0.1);
+      });
+      tl.to("#typing", { opacity: 0, duration: 0.15 }, 8.25);
+      bubbleIn("#msg-3", 8.25, -10);
+      // typing sits before msg-3 in DOM; collapse it so msg-3 takes its slot
+      tl.fromTo("#typing", { height: 33, paddingTop: 12, paddingBottom: 12 }, { height: 0, paddingTop: 0, paddingBottom: 0, duration: 0.01, immediateRender: false }, 8.24);
+
+      // ---------- BEAT 4: morph to web admin (9 - 12) ----------
+      tl.fromTo("#chat", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, 8.85);
+      tl.fromTo("#notch", { opacity: 1 }, { opacity: 0, duration: 0.25 }, 8.9);
+      tl.fromTo("#device", { width: 264, height: 540, borderRadius: 42 }, { width: 490, height: 350, borderRadius: 18, duration: 0.6, ease: "power3.inOut" }, 9.0);
+      tl.fromTo("#screen", { borderRadius: 34 }, { borderRadius: 8, duration: 0.6, ease: "power3.inOut" }, 9.0);
+      tl.fromTo("#admin", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 9.45);
+      tl.fromTo([".side-item"], { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.06, ease: "power2.out" }, 9.6);
+      tl.fromTo(["#stat-1", "#stat-2"], { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" }, 9.7);
+      const counter = { u: 0, m: 0 };
+      tl.fromTo(
+        counter,
+        { u: 0, m: 0 },
+        {
+          u: 1284,
+          m: 342,
+          duration: 1.0,
+          ease: "power2.out",
+          onUpdate: () => {
+            document.getElementById("stat-users").textContent = Math.round(counter.u).toLocaleString("en-US");
+            document.getElementById("stat-matches").textContent = String(Math.round(counter.m));
+          },
+        },
+        9.8,
+      );
+      tl.fromTo(".bar", { scaleY: 0 }, { scaleY: 1, duration: 0.5, stagger: 0.07, ease: "power3.out" }, 9.9);
+      tl.fromTo(["#row-1", "#row-2", "#row-3"], { opacity: 0, x: 16 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.1, ease: "power2.out" }, 10.1);
+      tl.fromTo("#row-3 .tag", { scale: 1 }, { scale: 1.15, duration: 0.2, yoyo: true, repeat: 1, ease: "sine.inOut" }, 10.8);
+
+      // ---------- loop back to t=0 state (11.35 - 12) ----------
+      tl.to("#admin", { opacity: 0, duration: 0.25, ease: "power2.in" }, 11.35);
+      tl.to("#device", { width: 264, height: 540, borderRadius: 42, duration: 0.5, ease: "power3.inOut" }, 11.45);
+      tl.to("#screen", { borderRadius: 34, duration: 0.5, ease: "power3.inOut" }, 11.45);
+      tl.to("#notch", { opacity: 1, duration: 0.25 }, 11.7);
+      tl.fromTo("#login", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, 11.65);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

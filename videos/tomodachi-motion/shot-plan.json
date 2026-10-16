@@ -1,0 +1,28 @@
+{
+  "category": "lower-thirds",
+  "category_note": "UI/feature showcase treated as a form category (orchestrator directive); no search, all HTML/CSS/SVG",
+  "duration_s": 12,
+  "fps": 30,
+  "canvas": { "w": 1280, "h": 720, "aspect": "16:9" },
+  "style": "Dark portfolio palette, schematic phone mockup left (40%), feature copy right (60%); app-navigation style screen slides between beats; seamless loop back to beat 1 resting state",
+  "palette": ["#050d1a", "#0f172a", "#e2e8f0", "#94a3b8", "#38bdf8", "#818cf8", "#c084fc"],
+  "font": "Inter",
+  "beats": [0, 2, 4, 6, 8, 10, 12],
+  "export": "mp4",
+  "asset_needs": [],
+  "block": null,
+  "customize": {},
+  "catalog_search": "Searched 'phone app UI mockup', 'leaderboard reorder', 'notification banner lock screen' -> app-showcase, device-frame-stage, notification-cascade etc. are 1920x1080 standalone scenes with their own palettes; the 6-beat unified schematic phone set is hand-authored to keep all 4 portfolio pieces consistent.",
+  "content": {
+    "project": "Tomodachi",
+    "persistent": ["project name top-left", "chip: 200+ real-time Socket.IO events", "progress dots"],
+    "scenes": [
+      { "id": "b1", "start": 0, "end": 2, "title": "Chat & group chat", "motion": "online dots pop, bubbles scale_punch in, typing dots bounce" },
+      { "id": "b2", "start": 2, "end": 4, "title": "Live streaming from PC", "motion": "PC card in, packets flow down RTMP rail, LIVE badge pulse, viewer count-up" },
+      { "id": "b3", "start": 4, "end": 6, "title": "Games & leaderboards", "motion": "round bar fills, score count-up, row overtakes to rank 1" },
+      { "id": "b4", "start": 6, "end": 8, "title": "In-app purchases & store orders", "motion": "add-to-cart press, chip flies to cart badge, order steps check off" },
+      { "id": "b5", "start": 8, "end": 10, "title": "Restaurant & hotel bookings", "motion": "tab indicator slide, date range pick, confirmation stamp" },
+      { "id": "b6", "start": 10, "end": 12, "title": "Push notifications & Google Sign-In", "motion": "banners drop on lock screen, sign-in button morphs to signed-in avatar, loop back to b1" }
+    ]
+  }
+}

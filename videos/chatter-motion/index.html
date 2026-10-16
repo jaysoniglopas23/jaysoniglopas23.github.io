@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --bg: #050d1a;
+        --surface: #0f172a;
+        --surface-2: #0b1324;
+        --surface-glass: rgba(15, 23, 42, 0.8);
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --sky: #38bdf8;
+        --indigo: #818cf8;
+        --violet: #c084fc;
+        --green: #4ade80;
+        --line: rgba(56, 189, 248, 0.15);
+        --line-soft: rgba(148, 163, 184, 0.14);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+        color: var(--text);
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ---------- background ---------- */
+      .bg-glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      #glow-a {
+        width: 760px;
+        height: 760px;
+        left: -180px;
+        top: -120px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(56, 189, 248, 0) 65%);
+      }
+      #glow-b {
+        width: 820px;
+        height: 820px;
+        left: 620px;
+        top: 120px;
+        background: radial-gradient(circle, rgba(129, 140, 248, 0.13) 0%, rgba(192, 132, 252, 0) 65%);
+      }
+      #grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
+        background-size: 48px 48px;
+      }
+      .numeral {
+        position: absolute;
+        right: 36px;
+        bottom: -70px;
+        font-size: 300px;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        color: rgba(148, 163, 184, 0.05);
+        line-height: 1;
+      }
+
+      /* ---------- chrome ---------- */
+      #brand {
+        position: absolute;
+        left: 48px;
+        top: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      #brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--sky), var(--indigo));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #brand-name {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      #stack {
+        position: absolute;
+        right: 48px;
+        top: 34px;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      /* ---------- phone ---------- */
+      #phone-col {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 512px;
+        height: 720px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 50px;
+      }
+      #phone {
+        position: relative;
+        width: 316px;
+        height: 604px;
+        border-radius: 46px;
+        background: var(--surface-2);
+        border: 2px solid rgba(148, 163, 184, 0.22);
+        padding: 12px;
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.55),
+          0 0 0 8px rgba(56, 189, 248, 0.04),
+          0 0 80px rgba(56, 189, 248, 0.1);
+      }
+      #screen {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 35px;
+        background: var(--surface);
+        overflow: hidden;
+      }
+      #notch {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        margin-left: -46px;
+        width: 92px;
+        height: 24px;
+        border-radius: 12px;
+        background: #020617;
+        z-index: 5;
+      }
+      #statusbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 44px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        z-index: 4;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .sb-bar {
+        width: 4px;
+        border-radius: 2px;
+        background: var(--text);
+      }
+      .sb-batt {
+        width: 22px;
+        height: 11px;
+        border-radius: 3px;
+        border: 1.5px solid var(--text);
+        padding: 1px;
+        margin-left: 4px;
+      }
+      .sb-batt i {
+        display: block;
+        width: 70%;
+        height: 100%;
+        border-radius: 1px;
+        background: var(--text);
+      }
+      .view {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 44px;
+        bottom: 0;
+        padding: 10px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .view-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+      }
+      .view-title {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* view 1: conversations */
+      .search {
+        height: 38px;
+        border-radius: 19px;
+        background: rgba(148, 163, 184, 0.08);
+        border: 1px solid var(--line-soft);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .row {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 66px;
+        padding: 0 8px;
+        border-radius: 16px;
+      }
+      .row-flash {
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid var(--line);
+        opacity: 0;
+      }
+      .avatar {
+        position: relative;
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        font-weight: 700;
+        color: #0b1324;
+      }
+      .av-sky {
+        background: linear-gradient(135deg, #7dd3fc, var(--sky));
+      }
+      .av-indigo {
+        background: linear-gradient(135deg, #a5b4fc, var(--indigo));
+      }
+      .av-violet {
+        background: linear-gradient(135deg, #e9d5ff, var(--violet));
+      }
+      .av-slate {
+        background: linear-gradient(135deg, #cbd5e1, #64748b);
+      }
+      .row-main {
+        position: relative;
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .row-name {
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .row-prev {
+        font-size: 14px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .row-side {
+        position: relative;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+      .row-time {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .badge {
+        height: 24px;
+        min-width: 24px;
+        border-radius: 12px;
+        background: var(--sky);
+        overflow: hidden;
+        padding: 0 7px;
+      }
+      .badge-col {
+        display: flex;
+        flex-direction: column;
+      }
+      .badge-col span {
+        display: block;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 800;
+        color: #04121f;
+      }
+      .badge-ghost {
+        height: 24px;
+      }
+
+      /* view 2: chat */
+      .chat-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 48px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .chat-head .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+      }
+      .chat-who {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .chat-name {
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .chat-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--sky);
+      }
+      .online-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--sky);
+      }
+      .msgs {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 6px;
+      }
+      .bubble {
+        max-width: 210px;
+        padding: 10px 14px;
+        border-radius: 18px;
+        font-size: 16px;
+        line-height: 1.35;
+      }
+      .bubble-in {
+        align-self: flex-start;
+        background: rgba(148, 163, 184, 0.14);
+        border: 1px solid var(--line-soft);
+        border-bottom-left-radius: 6px;
+        transform-origin: left bottom;
+      }
+      .bubble-out {
+        align-self: flex-end;
+        background: linear-gradient(135deg, #0369a1, #4338ca);
+        color: #f8fafc;
+        border-bottom-right-radius: 6px;
+        transform-origin: right bottom;
+        font-weight: 500;
+      }
+      .receipt {
+        align-self: flex-end;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 18px;
+        margin-top: -4px;
+      }
+      .receipt-label {
+        position: relative;
+        width: 70px;
+        height: 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .receipt-label span {
+        position: absolute;
+        right: 0;
+        top: 0;
+        line-height: 18px;
+      }
+      .ticks {
+        width: 26px;
+        height: 16px;
+      }
+      .typing {
+        align-self: flex-start;
+        display: flex;
+        gap: 5px;
+        padding: 13px 14px;
+        border-radius: 18px;
+        border-bottom-left-radius: 6px;
+        background: rgba(148, 163, 184, 0.14);
+        border: 1px solid var(--line-soft);
+        transform-origin: left bottom;
+      }
+      .typing i {
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--muted);
+      }
+      .composer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 44px;
+      }
+      .input {
+        position: relative;
+        flex: 1 1 auto;
+        height: 40px;
+        border-radius: 20px;
+        background: rgba(148, 163, 184, 0.08);
+        border: 1px solid var(--line-soft);
+        overflow: hidden;
+      }
+      .input-ph,
+      .input-text {
+        position: absolute;
+        left: 14px;
+        top: 0;
+        line-height: 38px;
+        font-size: 15px;
+        white-space: nowrap;
+      }
+      .input-ph {
+        color: var(--muted);
+      }
+      .input-text-clip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 190px;
+        overflow: hidden;
+      }
+      .input-text {
+        color: var(--text);
+      }
+      .send {
+        flex: 0 0 auto;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--sky), var(--indigo));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* view 3: types */
+      .code-card {
+        position: relative;
+        border-radius: 18px;
+        background: #0a1222;
+        border: 1px solid var(--line);
+        padding: 14px 0;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 17px;
+        font-weight: 500;
+      }
+      .code-tab {
+        display: flex;
+        gap: 6px;
+        padding: 0 16px 10px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .code-tab i {
+        display: block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: rgba(148, 163, 184, 0.35);
+      }
+      .cl {
+        position: relative;
+        height: 32px;
+        line-height: 32px;
+        padding: 0 16px;
+        white-space: pre;
+      }
+      .cl-band {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        top: 2px;
+        bottom: 2px;
+        border-radius: 8px;
+        background: rgba(129, 140, 248, 0.16);
+        border-left: 3px solid var(--indigo);
+        transform-origin: left center;
+      }
+      .cl-txt {
+        position: relative;
+      }
+      .k {
+        color: var(--violet);
+      }
+      .n {
+        color: var(--sky);
+      }
+      .f {
+        color: var(--text);
+      }
+      .p {
+        color: var(--muted);
+      }
+      .t {
+        color: var(--indigo);
+      }
+      .render-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        padding-left: 4px;
+      }
+      .preview {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+      .pv-part {
+        position: relative;
+      }
+      .pv-ring {
+        position: absolute;
+        inset: -4px;
+        border-radius: 22px;
+        border: 2px solid var(--indigo);
+        box-shadow: 0 0 18px rgba(129, 140, 248, 0.45);
+        opacity: 0;
+      }
+      .pv-meta {
+        display: flex;
+        gap: 8px;
+      }
+      .pv-chip {
+        position: relative;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 4px 10px;
+        border-radius: 10px;
+        background: rgba(148, 163, 184, 0.1);
+      }
+      .pv-chip .pv-ring {
+        border-radius: 12px;
+        inset: -3px;
+      }
+      .ok-pill {
+        align-self: center;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 18px;
+        background: rgba(74, 222, 128, 0.12);
+        border: 1px solid rgba(74, 222, 128, 0.35);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--green);
+      }
+
+      /* view 4: checks */
+      .checks {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .check {
+        position: relative;
+        border-radius: 18px;
+        background: rgba(148, 163, 184, 0.06);
+        border: 1px solid var(--line);
+        padding: 14px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .check-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .tool-ic {
+        flex: 0 0 auto;
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 800;
+        color: #0b1324;
+      }
+      .check-txt {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .check-name {
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .check-sub {
+        position: relative;
+        height: 18px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .check-sub span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        line-height: 18px;
+        white-space: nowrap;
+      }
+      .check-sub .done {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .tick-wrap {
+        position: relative;
+        flex: 0 0 auto;
+        width: 30px;
+        height: 30px;
+      }
+      .tick-pending {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(148, 163, 184, 0.35);
+      }
+      .tick-done {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .bar {
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(148, 163, 184, 0.14);
+        overflow: hidden;
+      }
+      .bar-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, var(--sky), var(--green));
+        transform-origin: left center;
+      }
+      .all-pass {
+        align-self: center;
+        margin-top: 6px;
+      }
+
+      /* ---------- right column ---------- */
+      #copy-col {
+        position: absolute;
+        left: 560px;
+        top: 0;
+        width: 672px;
+        height: 720px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 34px;
+        padding-top: 40px;
+      }
+      #copy-stack {
+        position: relative;
+        width: 100%;
+        height: 330px;
+      }
+      .copy {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        color: var(--sky);
+      }
+      .eyebrow-rule {
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--sky), var(--violet));
+        transform-origin: left center;
+      }
+      .title {
+        font-size: 64px;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+        line-height: 1.04;
+        color: var(--text);
+      }
+      .line {
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.4;
+        color: var(--muted);
+        max-width: 600px;
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .chip {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: var(--surface-glass);
+        border: 1px solid var(--line);
+      }
+      #dots {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background: rgba(148, 163, 184, 0.3);
+      }
+      #d1 {
+        width: 34px;
+        background: #38bdf8;
+      }
+      #dots-label {
+        margin-left: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-fps="30"
+      data-width="1280"
+      data-height="720"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="12" data-track-index="0">
+        <!-- background -->
+        <div id="grid"></div>
+        <div id="glow-a" class="bg-glow"></div>
+        <div id="glow-b" class="bg-glow"></div>
+        <div id="num-1" class="numeral" aria-hidden="true" data-layout-ignore="true">01</div>
+        <div id="num-2" class="numeral" aria-hidden="true" data-layout-ignore="true">02</div>
+        <div id="num-3" class="numeral" aria-hidden="true" data-layout-ignore="true">03</div>
+        <div id="num-4" class="numeral" aria-hidden="true" data-layout-ignore="true">04</div>
+
+        <!-- chrome -->
+        <div id="brand">
+          <div id="brand-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"
+                fill="#04121f"
+              />
+            </svg>
+          </div>
+          <div id="brand-name">Chatter</div>
+        </div>
+        <div id="stack">REACT NATIVE · TYPESCRIPT</div>
+
+        <!-- phone -->
+        <div id="phone-col">
+          <div id="phone">
+            <div id="screen">
+              <div id="notch"></div>
+              <div id="statusbar">
+                <span>9:41</span>
+                <span class="sb-icons">
+                  <i class="sb-bar" style="height: 5px"></i>
+                  <i class="sb-bar" style="height: 8px"></i>
+                  <i class="sb-bar" style="height: 11px"></i>
+                  <span class="sb-batt"><i></i></span>
+                </span>
+              </div>
+
+              <!-- VIEW 1: conversations -->
+              <div id="v1" class="view">
+                <div class="view-head">
+                  <div class="view-title">Chats</div>
+                  <div class="icon-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 5v14M5 12h14" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="search">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="2.4" />
+                    <path d="M16.5 16.5L21 21" stroke="#94a3b8" stroke-width="2.4" stroke-linecap="round" />
+                  </svg>
+                  Search
+                </div>
+                <div class="rows">
+                  <div id="r1" class="row">
+                    <div id="r1-flash" class="row-flash"></div>
+                    <div class="avatar av-sky">A</div>
+                    <div class="row-main">
+                      <div class="row-name">User A</div>
+                      <div class="row-prev">See you at 5?</div>
+                    </div>
+                    <div class="row-side">
+                      <div class="row-time">5:01</div>
+                      <div id="b1" class="badge">
+                        <div id="b1-col" class="badge-col"><span>1</span><span>2</span><span>3</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="r2" class="row">
+                    <div id="r2-flash" class="row-flash"></div>
+                    <div class="avatar av-indigo">T</div>
+                    <div class="row-main">
+                      <div class="row-name">Team Chat</div>
+                      <div class="row-prev">User C: build is green</div>
+                    </div>
+                    <div class="row-side">
+                      <div class="row-time">4:58</div>
+                      <div id="b2" class="badge">
+                        <div id="b2-col" class="badge-col">
+                          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="r3" class="row">
+                    <div class="avatar av-violet">B</div>
+                    <div class="row-main">
+                      <div class="row-name">User B</div>
+                      <div class="row-prev">Sounds good</div>
+                    </div>
+                    <div class="row-side">
+                      <div class="row-time">4:40</div>
+                      <div class="badge-ghost"></div>
+                    </div>
+                  </div>
+                  <div id="r4" class="row">
+                    <div id="r4-flash" class="row-flash"></div>
+                    <div class="avatar av-slate">D</div>
+                    <div class="row-main">
+                      <div class="row-name">User D</div>
+                      <div class="row-prev">Sent a photo</div>
+                    </div>
+                    <div class="row-side">
+                      <div class="row-time">4:12</div>
+                      <div id="b4" class="badge">
+                        <div id="b4-col" class="badge-col"><span>1</span><span>2</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="r5" class="row">
+                    <div class="avatar av-sky">E</div>
+                    <div class="row-main">
+                      <div class="row-name">User E</div>
+                      <div class="row-prev">Thanks!</div>
+                    </div>
+                    <div class="row-side">
+                      <div class="row-time">Mon</div>
+                      <div class="badge-ghost"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIEW 2: chat -->
+              <div id="v2" class="view">
+                <div class="chat-head">
+                  <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+                    <path d="M11 2L3 10l8 8" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <div class="avatar av-sky">A</div>
+                  <div class="chat-who">
+                    <div class="chat-name">User A</div>
+                    <div class="chat-status"><span class="online-dot"></span>online</div>
+                  </div>
+                </div>
+                <div class="msgs">
+                  <div id="m-in" class="bubble bubble-in">Are we still on for today?</div>
+                  <div id="m-out" class="bubble bubble-out">Yes, 5 PM works.</div>
+                  <div id="m-receipt" class="receipt">
+                    <div class="receipt-label">
+                      <span id="rc-sent">Sent</span>
+                      <span id="rc-deliv">Delivered</span>
+                      <span id="rc-read">Read</span>
+                    </div>
+                    <svg class="ticks" viewBox="0 0 26 16" fill="none">
+                      <path
+                        id="tick-1"
+                        d="M2 8.5l4 4L14 3.5"
+                        stroke="#94a3b8"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-dasharray="20"
+                        stroke-dashoffset="20"
+                      />
+                      <path
+                        id="tick-2"
+                        d="M10 12.5L22 3.5"
+                        stroke="#94a3b8"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-dasharray="16"
+                        stroke-dashoffset="16"
+                      />
+                    </svg>
+                  </div>
+                  <div id="m-typing" class="typing"><i id="td-1"></i><i id="td-2"></i><i id="td-3"></i></div>
+                </div>
+                <div class="composer">
+                  <div class="input">
+                    <span id="in-ph" class="input-ph">Message</span>
+                    <div id="in-clip" class="input-text-clip">
+                      <span class="input-text">Yes, 5 PM works.</span>
+                    </div>
+                  </div>
+                  <div id="send" class="send">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 12l16-8-6 16-2.5-6.5z" fill="#04121f" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIEW 3: types -->
+              <div id="v3" class="view">
+                <div class="view-head">
+                  <div class="view-title">Typed model</div>
+                </div>
+                <div class="code-card">
+                  <div class="code-tab"><i></i><i></i><i></i></div>
+                  <div class="cl"><span class="cl-txt"><span class="k">type</span> <span class="n">Message</span> <span class="p">= {</span></span></div>
+                  <div class="cl"><div id="band-1" class="cl-band"></div><span class="cl-txt">  <span class="f">id</span><span class="p">:</span> <span id="ty-1" class="t">string</span><span class="p">;</span></span></div>
+                  <div class="cl"><div id="band-2" class="cl-band"></div><span class="cl-txt">  <span class="f">text</span><span class="p">:</span> <span id="ty-2" class="t">string</span><span class="p">;</span></span></div>
+                  <div class="cl"><div id="band-3" class="cl-band"></div><span class="cl-txt">  <span class="f">sentAt</span><span class="p">:</span> <span id="ty-3" class="t">Date</span><span class="p">;</span></span></div>
+                  <div class="cl"><span class="cl-txt"><span class="p">}</span></span></div>
+                </div>
+                <div class="render-label">RENDERS AS</div>
+                <div class="preview">
+                  <div class="pv-part">
+                    <div class="bubble bubble-out">Yes, 5 PM works.</div>
+                    <div id="ring-2" class="pv-ring"></div>
+                  </div>
+                  <div class="pv-meta">
+                    <div class="pv-chip">#a1f3<div id="ring-1" class="pv-ring"></div></div>
+                    <div class="pv-chip">5:02 PM<div id="ring-3" class="pv-ring"></div></div>
+                  </div>
+                </div>
+                <div id="ts-ok" class="ok-pill">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12.5l4.5 4.5L19 7" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  0 type errors
+                </div>
+              </div>
+
+              <!-- VIEW 4: checks -->
+              <div id="v4" class="view">
+                <div class="view-head">
+                  <div class="view-title">Checks</div>
+                </div>
+                <div class="checks">
+                  <div id="c1" class="check">
+                    <div class="check-top">
+                      <div class="tool-ic av-sky">J</div>
+                      <div class="check-txt">
+                        <div class="check-name">Jest</div>
+                        <div class="check-sub"><span id="c1-run">Running tests</span><span id="c1-done" class="done">All tests passing</span></div>
+                      </div>
+                      <div class="tick-wrap">
+                        <div class="tick-pending"></div>
+                        <div id="c1-tick" class="tick-done">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#04121f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="bar"><div id="c1-bar" class="bar-fill"></div></div>
+                  </div>
+                  <div id="c2" class="check">
+                    <div class="check-top">
+                      <div class="tool-ic av-indigo">L</div>
+                      <div class="check-txt">
+                        <div class="check-name">ESLint</div>
+                        <div class="check-sub"><span id="c2-run">Linting</span><span id="c2-done" class="done">0 problems</span></div>
+                      </div>
+                      <div class="tick-wrap">
+                        <div class="tick-pending"></div>
+                        <div id="c2-tick" class="tick-done">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#04121f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="c3" class="check">
+                    <div class="check-top">
+                      <div class="tool-ic av-violet">P</div>
+                      <div class="check-txt">
+                        <div class="check-name">Prettier</div>
+                        <div class="check-sub"><span id="c3-run">Checking format</span><span id="c3-done" class="done">Formatted</span></div>
+                      </div>
+                      <div class="tick-wrap">
+                        <div class="tick-pending"></div>
+                        <div id="c3-tick" class="tick-done">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#04121f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="all-pass" class="ok-pill all-pass">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12.5l4.5 4.5L19 7" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  All checks passed
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- right column -->
+        <div id="copy-col">
+          <div id="copy-stack">
+            <div id="t1" class="copy">
+              <div class="eyebrow"><span class="eyebrow-rule"></span>FEATURE 01</div>
+              <div class="title">Conversations list</div>
+              <div class="line">Threads slide in live, with unread badges that count up in real time.</div>
+              <div class="chips"><span class="chip">Real-time</span><span class="chip">Unread counts</span></div>
+            </div>
+            <div id="t2" class="copy">
+              <div class="eyebrow"><span class="eyebrow-rule"></span>FEATURE 02</div>
+              <div class="title">Messaging</div>
+              <div class="line">Bubbles send instantly, with sent, delivered and read receipts.</div>
+              <div class="chips"><span class="chip">Delivery ticks</span><span class="chip">Typing indicator</span></div>
+            </div>
+            <div id="t3" class="copy">
+              <div class="eyebrow"><span class="eyebrow-rule"></span>FEATURE 03</div>
+              <div class="title">TypeScript</div>
+              <div class="line">Typed message models keep data and UI in sync, end to end.</div>
+              <div class="chips"><span class="chip">Strict types</span><span class="chip">Shared models</span></div>
+            </div>
+            <div id="t4" class="copy">
+              <div class="eyebrow"><span class="eyebrow-rule"></span>FEATURE 04</div>
+              <div class="title">Quality tooling</div>
+              <div class="line">Jest tests, ESLint and Prettier all run green before every release.</div>
+              <div class="chips"><span class="chip">Jest</span><span class="chip">ESLint</span><span class="chip">Prettier</span></div>
+            </div>
+          </div>
+          <div id="dots">
+            <div id="d1" class="dot"></div>
+            <div id="d2" class="dot"></div>
+            <div id="d3" class="dot"></div>
+            <div id="d4" class="dot"></div>
+            <div id="dots-label">CHATTER · 4 FEATURES</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const C = {
+        sky: "#38bdf8",
+        indigo: "#818cf8",
+        violet: "#c084fc",
+        muted: "#94a3b8",
+        dotIdle: "rgba(148,163,184,0.3)",
+      };
+      const tl = gsap.timeline({ paused: true });
+
+      // ---------- rest state R (t=0 and t=12) ----------
+      const views = ["#v1", "#v2", "#v3", "#v4"];
+      const copies = ["#t1", "#t2", "#t3", "#t4"];
+      const nums = ["#num-1", "#num-2", "#num-3", "#num-4"];
+      const dots = ["#d1", "#d2", "#d3", "#d4"];
+      const rows = ["#r1", "#r2", "#r3", "#r4", "#r5"];
+      const badges = ["#b1", "#b2", "#b4"];
+      const badgeCols = ["#b1-col", "#b2-col", "#b4-col"];
+
+      tl.set(views.slice(1), { autoAlpha: 0, x: 0 }, 0);
+      tl.set(copies.slice(1), { autoAlpha: 0, y: 0 }, 0);
+      tl.set(nums.slice(1), { autoAlpha: 0 }, 0);
+      tl.set(["#v1", "#t1", "#num-1"], { autoAlpha: 1, x: 0, y: 0 }, 0);
+      
+      
+      tl.set(rows, { autoAlpha: 0, x: 36 }, 0);
+      tl.set(["#t2 .eyebrow-rule", "#t3 .eyebrow-rule", "#t4 .eyebrow-rule"], { scaleX: 0 }, 0);
+      tl.set(badges, { scale: 0 }, 0);
+      tl.set(badgeCols, { y: 0 }, 0);
+
+      // ---------- ambient (whole loop, returns to start) ----------
+      tl.fromTo("#glow-a", { x: 0, y: 0 }, { x: 70, y: 40, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+      tl.fromTo("#glow-b", { x: 0, y: 0 }, { x: -60, y: -30, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+      tl.fromTo("#phone", { y: 0 }, { y: -8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+
+      // ---------- transition helper ----------
+      function swap(from, to, at) {
+        const a = from - 1;
+        const b = to - 1;
+        // phone view
+        tl.to(views[a], { autoAlpha: 0, x: -34, duration: 0.3, ease: "power2.in" }, at);
+        tl.fromTo(views[b], { autoAlpha: 0, x: 34 }, { autoAlpha: 1, x: 0, duration: 0.5, ease: "expo.out", immediateRender: false }, at + 0.26);
+        // copy
+        tl.to(copies[a], { autoAlpha: 0, y: -22, duration: 0.28, ease: "power3.in" }, at + 0.04);
+        tl.fromTo(copies[b], { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power4.out", immediateRender: false }, at + 0.3);
+        tl.fromTo(
+          copies[b] + " .eyebrow-rule",
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.5, ease: "circ.out", immediateRender: false },
+          at + 0.4,
+        );
+        // numeral
+        tl.to(nums[a], { autoAlpha: 0, duration: 0.3, ease: "sine.in" }, at);
+        tl.fromTo(nums[b], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.out", immediateRender: false }, at + 0.2);
+        // dots
+        tl.fromTo(dots[a], { width: 34, backgroundColor: C.sky }, { width: 10, backgroundColor: C.dotIdle, duration: 0.4, ease: "power2.inOut", immediateRender: false }, at + 0.1);
+        tl.fromTo(dots[b], { width: 10, backgroundColor: C.dotIdle }, { width: 34, backgroundColor: C.sky, duration: 0.4, ease: "power2.inOut", immediateRender: false }, at + 0.1);
+      }
+
+      // ---------- BEAT 1: conversations (0 - 3) ----------
+      tl.to(rows, { autoAlpha: 1, x: 0, duration: 0.5, ease: "power3.out", stagger: 0.08 }, 0.2);
+      tl.to("#b1", { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 0.75);
+      tl.to("#b2", { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 0.83);
+      tl.to("#b4", { scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 0.91);
+      // odometer ticks (seek-safe: translate the digit column)
+      [1.25, 1.75].forEach((t, i) => tl.to("#b1-col", { y: -24 * (i + 1), duration: 0.22, ease: "back.out(1.6)" }, t));
+      [1.1, 1.4, 1.7, 2.0].forEach((t, i) => tl.to("#b2-col", { y: -24 * (i + 1), duration: 0.2, ease: "power3.out" }, t));
+      tl.to("#b4-col", { y: -24, duration: 0.22, ease: "back.out(1.6)" }, 1.95);
+      // row flashes on new messages
+      tl.fromTo("#r2-flash", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power1.out", yoyo: true, repeat: 1 }, 1.1);
+      tl.fromTo("#r1-flash", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power1.out", yoyo: true, repeat: 1 }, 1.75);
+      tl.fromTo("#r4-flash", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power1.out", yoyo: true, repeat: 1 }, 1.95);
+      tl.fromTo(["#b1", "#b2", "#b4"], { boxShadow: "0 0 0px rgba(56,189,248,0)" }, { boxShadow: "0 0 16px rgba(56,189,248,0.8)", duration: 0.3, ease: "sine.inOut", yoyo: true, repeat: 1, stagger: 0.12 }, 2.15);
+
+      swap(1, 2, 2.62);
+
+      // reset view 1 internals while hidden so the loop returns to rest state R
+      tl.set(rows, { autoAlpha: 0, x: 36 }, 6.0);
+      tl.set(badges, { scale: 0 }, 6.0);
+      tl.set(badgeCols, { y: 0 }, 6.0);
+
+      // ---------- BEAT 2: messaging (3 - 6) ----------
+      tl.fromTo("#m-in", { autoAlpha: 0, scale: 0.75 }, { autoAlpha: 1, scale: 1, duration: 0.14, ease: "power2.out" }, 3.15);
+      tl.set(["#m-out", "#m-receipt", "#m-typing"], { autoAlpha: 0 }, 0);
+      tl.fromTo("#in-clip", { width: 0 }, { width: 190, duration: 0.6, ease: "none" }, 3.45);
+      tl.to("#in-ph", { autoAlpha: 0, duration: 0.1, ease: "power1.out" }, 3.45);
+      tl.fromTo("#send", { scale: 1 }, { scale: 0.86, duration: 0.1, ease: "power2.in", yoyo: true, repeat: 1 }, 4.1);
+      tl.to("#in-clip", { autoAlpha: 0, duration: 0.12, ease: "power1.in" }, 4.22);
+      tl.to("#in-ph", { autoAlpha: 1, duration: 0.2, ease: "power1.out" }, 4.34);
+      tl.fromTo("#m-out", { autoAlpha: 0, scale: 0.75, y: 40 }, { autoAlpha: 1, scale: 1, y: 0, duration: 0.32, ease: "back.out(1.7)" }, 4.22);
+      tl.fromTo("#m-receipt", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2, ease: "power1.out" }, 4.45);
+      tl.set(["#rc-deliv", "#rc-read"], { autoAlpha: 0 }, 0);
+      tl.to("#tick-1", { strokeDashoffset: 0, duration: 0.25, ease: "power2.out" }, 4.5);
+      // delivered
+      tl.to("#tick-2", { strokeDashoffset: 0, duration: 0.22, ease: "power2.out" }, 4.9);
+      tl.to("#rc-sent", { autoAlpha: 0, duration: 0.15, ease: "power1.in" }, 4.9);
+      tl.to("#rc-deliv", { autoAlpha: 1, duration: 0.2, ease: "power1.out" }, 4.98);
+      // read
+      tl.to(["#tick-1", "#tick-2"], { stroke: C.sky, duration: 0.3, ease: "sine.out" }, 5.3);
+      tl.to("#rc-deliv", { autoAlpha: 0, duration: 0.15, ease: "power1.in" }, 5.3);
+      tl.to("#rc-read", { autoAlpha: 1, color: C.sky, duration: 0.2, ease: "power1.out" }, 5.38);
+      // typing indicator
+      tl.fromTo("#m-typing", { autoAlpha: 0, scale: 0.75 }, { autoAlpha: 1, scale: 1, duration: 0.2, ease: "back.out(2)" }, 5.4);
+      ["#td-1", "#td-2", "#td-3"].forEach((d, i) =>
+        tl.fromTo(d, { y: 0 }, { y: -5, duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: 1 }, 5.55 + i * 0.09),
+      );
+
+      swap(2, 3, 5.62);
+
+      // ---------- BEAT 3: TypeScript (6 - 9) ----------
+      tl.set(["#band-1", "#band-2", "#band-3"], { scaleX: 0, autoAlpha: 1 }, 0);
+      tl.set(["#ring-1", "#ring-2", "#ring-3"], { opacity: 0 }, 0);
+      tl.set("#ts-ok", { autoAlpha: 0, scale: 0.8 }, 0);
+      const fieldTimes = [6.45, 7.05, 7.65];
+      fieldTimes.forEach((t, i) => {
+        const n = i + 1;
+        tl.to("#band-" + n, { scaleX: 1, duration: 0.35, ease: "expo.out" }, t);
+        tl.fromTo("#ty-" + n, { color: C.indigo, textShadow: "0 0 0px rgba(192,132,252,0)" }, { color: C.violet, textShadow: "0 0 14px rgba(192,132,252,0.9)", duration: 0.3, ease: "sine.out" }, t + 0.08);
+        tl.to("#ring-" + n, { opacity: 1, duration: 0.25, ease: "power2.out" }, t + 0.15);
+        if (i < 2) {
+          tl.to("#band-" + n, { autoAlpha: 0.35, duration: 0.3, ease: "power1.inOut" }, t + 0.55);
+          tl.to("#ty-" + n, { textShadow: "0 0 0px rgba(192,132,252,0)", duration: 0.3, ease: "power1.inOut" }, t + 0.55);
+          tl.to("#ring-" + n, { opacity: 0, duration: 0.3, ease: "power1.in" }, t + 0.55);
+        }
+      });
+      tl.to("#ts-ok", { autoAlpha: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, 8.15);
+
+      swap(3, 4, 8.62);
+
+      // ---------- BEAT 4: quality tooling (9 - 12) ----------
+      tl.set(["#c1-bar"], { scaleX: 0 }, 0);
+      tl.set(["#c1-tick", "#c2-tick", "#c3-tick"], { scale: 0, autoAlpha: 0 }, 0);
+      tl.set(["#c1-done", "#c2-done", "#c3-done"], { autoAlpha: 0 }, 0);
+      tl.set("#all-pass", { autoAlpha: 0, y: 12 }, 0);
+      tl.fromTo(["#c1", "#c2", "#c3"], { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.07 }, 9.05);
+      tl.to("#c1-bar", { scaleX: 1, duration: 0.9, ease: "power1.inOut" }, 9.35);
+      const checkAt = [10.3, 10.6, 10.85];
+      checkAt.forEach((t, i) => {
+        const n = i + 1;
+        tl.to("#c" + n + "-tick", { scale: 1, autoAlpha: 1, duration: 0.3, ease: "back.out(2.6)" }, t);
+        tl.to("#c" + n + "-run", { autoAlpha: 0, duration: 0.12, ease: "power1.in" }, t);
+        tl.to("#c" + n + "-done", { autoAlpha: 1, duration: 0.2, ease: "power1.out" }, t + 0.08);
+        tl.fromTo("#c" + n, { borderColor: "rgba(56,189,248,0.15)" }, { borderColor: "rgba(74,222,128,0.45)", duration: 0.3, ease: "sine.out" }, t);
+      });
+      tl.to("#all-pass", { autoAlpha: 1, y: 0, duration: 0.35, ease: "expo.out" }, 11.0);
+
+      // return to rest state R (feature 01, empty conversations list) for a seamless loop
+      swap(4, 1, 11.38);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
