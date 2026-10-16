@@ -463,6 +463,22 @@
       margin: auto;
     }
 
+    /* ===== SITE-WIDE BACKGROUND MOTION (HyperFrames render) =====
+       Fixed behind every section; feature cards float in the side margins,
+       the centre column stays calm. z-index -1 keeps it under all content. */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .page-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     /* ===== HERO BACKGROUND MOTION (HyperFrames render) ===== */
     .hero .section-bg {
       position: absolute;
@@ -1413,6 +1429,13 @@
 </head>
 
 <body>
+
+<!-- SITE-WIDE MOTION BACKGROUND -->
+<div class="page-bg" aria-hidden="true">
+  <video class="bg-motion" autoplay muted loop playsinline preload="metadata" poster="media/page-bg.jpg">
+    <source src="media/page-bg.mp4" type="video/mp4">
+  </video>
+</div>
 
 <!-- PARTICLES -->
 <div class="particles">

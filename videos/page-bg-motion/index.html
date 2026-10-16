@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Page Background Features</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #050d1a;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #050d1a;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      /* ---------- background glow (margins only) ---------- */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      #orb-l1 {
+        left: -235px;
+        top: -170px;
+        width: 820px;
+        height: 820px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.09) 0%, rgba(56, 189, 248, 0.03) 38%, transparent 64%);
+      }
+      #orb-l2 {
+        left: -235px;
+        top: 440px;
+        width: 820px;
+        height: 820px;
+        background: radial-gradient(circle, rgba(192, 132, 252, 0.08) 0%, rgba(192, 132, 252, 0.03) 38%, transparent 64%);
+      }
+      #orb-r1 {
+        left: 1335px;
+        top: -60px;
+        width: 820px;
+        height: 820px;
+        background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, rgba(129, 140, 248, 0.035) 38%, transparent 64%);
+      }
+      #orb-r2 {
+        left: 1335px;
+        top: 520px;
+        width: 820px;
+        height: 820px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.07) 0%, rgba(56, 189, 248, 0.025) 38%, transparent 64%);
+      }
+
+      #dot-field {
+        position: absolute;
+        left: -48px;
+        top: 0;
+        width: 2016px;
+        height: 1080px;
+        background-image: radial-gradient(rgba(148, 163, 184, 0.14) 1.2px, transparent 1.6px);
+        background-size: 48px 48px;
+        -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 22%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.7) 100%);
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 22%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.7) 100%);
+      }
+
+      /* ---------- shared line-icon style ---------- */
+      .ic {
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        overflow: visible;
+      }
+
+      /* ---------- background icon field ---------- */
+      #icon-field {
+        position: absolute;
+        inset: 0;
+      }
+      .bg-icon {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .bg-icon .ic {
+        width: 100%;
+        height: 100%;
+        stroke-width: 1.6;
+      }
+
+      /* soft vertical darkening band over the centre reading column (x 340-1580) + vignette */
+      #calm {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(5, 13, 26, 0) 0%, rgba(5, 13, 26, 0) 16.5%, rgba(5, 13, 26, 0.5) 23%, rgba(5, 13, 26, 0.58) 50%, rgba(5, 13, 26, 0.5) 77%, rgba(5, 13, 26, 0) 83.5%, rgba(5, 13, 26, 0) 100%),
+          radial-gradient(ellipse at 50% 50%, transparent 62%, rgba(5, 13, 26, 0.45) 100%);
+        pointer-events: none;
+      }
+
+      /* ---------- compact feature cards (side margins only) ---------- */
+      #cards {
+        position: absolute;
+        inset: 0;
+      }
+      .card {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 18px 12px 12px;
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(56, 189, 248, 0.18);
+        box-shadow:
+          0 18px 44px rgba(2, 6, 23, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transform-origin: 50% 50%;
+        white-space: nowrap;
+        will-change: transform, opacity;
+      }
+      .card.glass {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+      }
+      .card-icon {
+        position: relative;
+        flex: 0 0 auto;
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card-icon .ic {
+        width: 23px;
+        height: 23px;
+      }
+      .tone-sky .card-icon {
+        color: #38bdf8;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.26), rgba(56, 189, 248, 0.06));
+        border: 1px solid rgba(56, 189, 248, 0.3);
+      }
+      .tone-indigo .card-icon {
+        color: #818cf8;
+        background: linear-gradient(135deg, rgba(129, 140, 248, 0.28), rgba(129, 140, 248, 0.06));
+        border: 1px solid rgba(129, 140, 248, 0.32);
+      }
+      .tone-violet .card-icon {
+        color: #c084fc;
+        background: linear-gradient(135deg, rgba(192, 132, 252, 0.26), rgba(192, 132, 252, 0.06));
+        border: 1px solid rgba(192, 132, 252, 0.3);
+      }
+      .card-text {
+        display: flex;
+        flex-direction: column;
+      }
+      .card-label {
+        font-size: 19px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        color: #e2e8f0;
+      }
+      .card-sub {
+        margin-top: 3px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.2;
+        color: #94a3b8;
+      }
+      .badge {
+        position: absolute;
+        right: -4px;
+        top: -4px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #c084fc;
+        border: 2px solid #0f172a;
+      }
+      .live-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 6px;
+        border-radius: 50%;
+        background: #f43f5e;
+        vertical-align: 2px;
+      }
+      .typing {
+        position: absolute;
+        right: -8px;
+        bottom: -6px;
+        display: flex;
+        gap: 3px;
+        padding: 4px 5px;
+        border-radius: 9px;
+        background: #1e293b;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+      }
+      .typing span {
+        display: block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #38bdf8;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-fps="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <svg id="icon-sprite" width="0" height="0" aria-hidden="true" style="position: absolute">
+        <defs id="sprite-defs"></defs>
+      </svg>
+      <div id="scene">
+        <div id="dot-field" data-layout-allow-overflow></div>
+        <div id="orb-l1" class="orb" data-layout-allow-overflow></div>
+        <div id="orb-l2" class="orb" data-layout-allow-overflow></div>
+        <div id="orb-r1" class="orb" data-layout-allow-overflow></div>
+        <div id="orb-r2" class="orb" data-layout-allow-overflow></div>
+        <div id="icon-field" aria-hidden="true" data-layout-ignore></div>
+        <div id="calm"></div>
+        <div id="cards" aria-hidden="true"></div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        const W = 1920;
+        const H = 1080;
+        const LOOP = 12; // seconds — every cycle below is a whole number per LOOP
+        const TAU = Math.PI * 2;
+        // Reading column of the site (max-width 1200 centred at 1920 wide) + safety pad
+        const COL = { x0: 340, x1: 1580 };
+
+        // Fixed-seed PRNG (mulberry32) — deterministic layout
+        function mulberry32(a) {
+          return function () {
+            a |= 0;
+            a = (a + 0x6d2b79f5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        const rand = mulberry32(20261016);
+        const pick = (arr) => arr[Math.floor(rand() * arr.length)];
+        const range = (a, b) => a + rand() * (b - a);
+        const smooth = (e0, e1, x) => {
+          const k = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+          return k * k * (3 - 2 * k);
+        };
+        // bump: 0 outside [a,d], eases up a→b, holds, eases down c→d
+        const bump = (t, a, b, c, d) => smooth(a, b, t) * (1 - smooth(c, d, t));
+
+        // ---------- Line icon set (24x24, stroke icons) ----------
+        const ICONS = {
+          sparkle:
+            '<path d="M12 3l1.9 5.6 5.6 1.9-5.6 1.9L12 18l-1.9-5.6-5.6-1.9 5.6-1.9z"/><path d="M19 3v4M17 5h4"/><path d="M5 18v3M3.5 19.5h3"/>',
+          chat: '<path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/>',
+          video: '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10.5l6-3.5v10l-6-3.5"/>',
+          trophy:
+            '<path d="M7 3h10v6a5 5 0 0 1-10 0z"/><path d="M7 5H4v1.5A3.5 3.5 0 0 0 7.5 10"/><path d="M17 5h3v1.5A3.5 3.5 0 0 1 16.5 10"/><path d="M12 14v4"/><path d="M8 21h8"/>',
+          bag: '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+          calendar:
+            '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>',
+          bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+          key: '<circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l3 3L22 7l-3-3"/>',
+          shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+          link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+          doc: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/>',
+          lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+          zap: '<path d="M13 2L3 14h9l-1 8 10-12h-9z"/>',
+          chart: '<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/>',
+          phone: '<rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18h2"/>',
+          code: '<path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/>',
+          // bracketed "T" glyph — generic typed-code mark (no brand logo)
+          tsglyph: '<path d="M7 3H4v18h3"/><path d="M17 3h3v18h-3"/><path d="M8.5 8h7"/><path d="M12 8v9"/>',
+          database:
+            '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>',
+          cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/>',
+          message: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+          heart:
+            '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>',
+          server:
+            '<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/>',
+        };
+        const defs = document.getElementById("sprite-defs");
+        defs.innerHTML = Object.keys(ICONS)
+          .map((k) => '<symbol id="i-' + k + '" viewBox="0 0 24 24">' + ICONS[k] + "</symbol>")
+          .join("");
+        const iconSvg = (name) => '<svg class="ic" viewBox="0 0 24 24"><use href="#i-' + name + '"></use></svg>';
+
+        // ---------- Feature cards ----------
+        // depth: near = bigger/crisp/brighter, mid, far = small/blurred/dim. Dimmer than the hero version.
+        const DEPTH = {
+          near: { s: 1.0, op: 0.5, blur: 0, glass: true },
+          mid: { s: 0.85, op: 0.36, blur: 0.6, glass: true },
+          far: { s: 0.7, op: 0.24, blur: 1.4, glass: false },
+        };
+        // x,y = card CENTRE in 1920x1080 video space.
+        // Left gutter x 20-330 (centre 175), right gutter x 1590-1900 (centre 1745). Centre column x 340-1580 stays card-free.
+        const L = 175;
+        const R = 1745;
+        const CARDS = [
+          // ----- left gutter, top → bottom -----
+          { id: "tomo", label: "Tomo AI", sub: "Gemini 2.5 Flash", icon: "sparkle", tone: "violet", x: L, y: 112, d: "near" },
+          { id: "rn", label: "React Native", sub: "", icon: "phone", tone: "sky", x: L - 8, y: 282, d: "far" },
+          { id: "chat", label: "Group Chat", sub: "Socket.IO", icon: "chat", tone: "sky", x: L + 4, y: 450, d: "mid", typing: true },
+          { id: "pg", label: "PostgreSQL", sub: "", icon: "database", tone: "indigo", x: L - 6, y: 618, d: "far" },
+          { id: "live", label: "Live Streaming", sub: "RTMP", icon: "video", tone: "indigo", x: L, y: 786, d: "mid", live: true },
+          { id: "book", label: "Bookings", sub: "", icon: "calendar", tone: "sky", x: L - 10, y: 958, d: "near" },
+          // ----- right gutter, top → bottom -----
+          { id: "node", label: "Node.js", sub: "", icon: "server", tone: "sky", x: R + 10, y: 120, d: "near" },
+          { id: "push", label: "Push Notifications", sub: "", icon: "bell", tone: "violet", x: R, y: 290, d: "mid", badge: true },
+          { id: "board", label: "Leaderboards", sub: "", icon: "trophy", tone: "sky", x: R + 6, y: 458, d: "far" },
+          { id: "ts", label: "TypeScript", sub: "", icon: "tsglyph", tone: "indigo", x: R - 4, y: 626, d: "mid" },
+          { id: "oauth", label: "Google Sign-In", sub: "OAuth", icon: "key", tone: "indigo", x: R + 6, y: 796, d: "far" },
+          { id: "aws", label: "AWS EC2", sub: "", icon: "cloud", tone: "violet", x: R + 12, y: 960, d: "near" },
+        ];
+
+        const cardsHost = document.getElementById("cards");
+        const cards = CARDS.map((c) => {
+          const dep = DEPTH[c.d];
+          const el = document.createElement("div");
+          el.id = "card-" + c.id;
+          el.className = "card tone-" + c.tone + (dep.glass ? " glass" : "");
+          el.setAttribute("data-layout-ignore", "");
+          el.setAttribute("aria-hidden", "true");
+          if (dep.blur) el.style.filter = "blur(" + dep.blur + "px)";
+          let extra = "";
+          if (c.badge) extra += '<span class="badge" id="badge-' + c.id + '"></span>';
+          if (c.typing)
+            extra +=
+              '<span class="typing"><span id="dot-' + c.id + '-0"></span><span id="dot-' + c.id + '-1"></span><span id="dot-' + c.id + '-2"></span></span>';
+          el.innerHTML =
+            '<div class="card-icon" id="icon-' + c.id + '">' + iconSvg(c.icon) + extra + "</div>" +
+            '<div class="card-text"><div class="card-label">' +
+            (c.live ? '<span class="live-dot" id="live-' + c.id + '"></span>' : "") +
+            c.label + "</div>" +
+            (c.sub ? '<div class="card-sub">' + c.sub + "</div>" : "") +
+            "</div>";
+          cardsHost.appendChild(el);
+          // anchor at (x,y); renderAt prefixes translate(-50%,-50%) so (x,y) is the card centre
+          el.style.left = c.x + "px";
+          el.style.top = c.y + "px";
+          return {
+            c,
+            el,
+            iconEl: el.querySelector(".card-icon"),
+            s: dep.s,
+            op: dep.op,
+            ax: range(5, 9), // small horizontal sway — stays inside the gutter
+            kx: pick([1, 2]),
+            px: rand() * TAU,
+            ay: range(26, 34), // slow vertical drift: one rise/fall per loop
+            py: rand() * TAU,
+            ab: range(3, 5), // small bob on top of the drift
+            kb: pick([3, 4]),
+            pb: rand() * TAU,
+            r0: range(-2, 2),
+            ar: range(0.7, 1.3),
+            kr: pick([1, 2]),
+            pr: rand() * TAU,
+          };
+        });
+
+        // ---------- Background icon field (jittered grid scatter, whole frame) ----------
+        const BG_NAMES = [
+          "sparkle", "chat", "video", "trophy", "bag", "calendar", "bell", "key", "link", "lock", "zap", "chart",
+          "phone", "code", "database", "cloud", "message", "heart", "server", "shield", "doc", "tsglyph",
+        ];
+        const BG_COLORS = ["#38bdf8", "#818cf8", "#c084fc", "#94a3b8"];
+        const field = document.getElementById("icon-field");
+        const bgIcons = [];
+        const COLS = 8;
+        const ROWS = 5;
+        let n = 0;
+        for (let r = 0; r < ROWS; r++) {
+          for (let c = 0; c < COLS; c++) {
+            if ((r * COLS + c) % 5 === 3) continue; // leave a few gaps — not a lattice
+            const cw = W / COLS;
+            const rh = H / ROWS;
+            const bx = cw * (c + 0.15 + rand() * 0.7);
+            const by = rh * (r + 0.15 + rand() * 0.7);
+            const size = Math.round(range(30, 58));
+            const el = document.createElement("div");
+            el.id = "bgi-" + n;
+            el.className = "bg-icon";
+            el.style.width = size + "px";
+            el.style.height = size + "px";
+            el.style.color = BG_COLORS[n % BG_COLORS.length];
+            el.innerHTML = iconSvg(BG_NAMES[(n * 5 + 3) % BG_NAMES.length]);
+            field.appendChild(el);
+            bgIcons.push({
+              el,
+              size,
+              bx: bx - size / 2,
+              by: by - size / 2,
+              ax: range(30, 70),
+              ay: range(40, 80),
+              kx: 1,
+              ky: pick([1, 1, 2]),
+              px: rand() * TAU,
+              py: rand() * TAU,
+              r0: range(-14, 14),
+              ar: range(6, 16),
+              kr: pick([1, 1, 2]),
+              pr: rand() * TAU,
+              op: range(0.1, 0.13),
+              kb: pick([1, 2, 3]),
+              pb: rand() * TAU,
+            });
+            n++;
+          }
+        }
+
+        // Accent elements
+        const pushBadge = document.getElementById("badge-push");
+        const liveDot = document.getElementById("live-live");
+        const typingDots = [0, 1, 2].map((i) => document.getElementById("dot-chat-" + i));
+        // Two highlight moments, one per gutter
+        const GLOW = {
+          tomo: { rgb: "192, 132, 252", win: [1.6, 2.4, 3.6, 4.6] },
+          push: { rgb: "192, 132, 252", win: [7.4, 8.2, 9.2, 10.2] },
+        };
+
+        // ---------- Deterministic frame function: everything derives from t ----------
+        function renderAt(t) {
+          const ph = (t / LOOP) * TAU; // one full turn per LOOP
+
+          bgIcons.forEach((b) => {
+            const x = b.bx + b.ax * Math.sin(ph * b.kx + b.px);
+            const y = b.by - b.ay * Math.sin(ph * b.ky + b.py);
+            const r = b.r0 + b.ar * Math.sin(ph * b.kr + b.pr);
+            const breathe = 0.78 + 0.22 * Math.sin(ph * b.kb + b.pb);
+            // calmer inside the reading column: ~65% of gutter opacity (≈ .05–.085)
+            const cx = x + b.size / 2;
+            const inCol = smooth(COL.x0 - 60, COL.x0 + 80, cx) * (1 - smooth(COL.x1 - 80, COL.x1 + 60, cx));
+            const calm = 1 - 0.35 * inCol;
+            b.el.style.transform = "translate(" + x.toFixed(2) + "px," + y.toFixed(2) + "px) rotate(" + r.toFixed(2) + "deg)";
+            b.el.style.opacity = (b.op * breathe * calm).toFixed(3);
+          });
+
+          cards.forEach((k) => {
+            const x = k.ax * Math.sin(ph * k.kx + k.px);
+            const y = k.ay * Math.sin(ph + k.py) + k.ab * Math.sin(ph * k.kb + k.pb);
+            const r = k.r0 + k.ar * Math.sin(ph * k.kr + k.pr);
+            let op = k.op;
+            const g = GLOW[k.c.id];
+            let lift = 1;
+            if (g) {
+              const e = bump(t, g.win[0], g.win[1], g.win[2], g.win[3]);
+              op = k.op + (0.74 - k.op) * e;
+              lift = 1 + 0.025 * e;
+              k.el.style.borderColor = "rgba(" + g.rgb + "," + (0.18 + 0.45 * e).toFixed(3) + ")";
+              k.el.style.boxShadow =
+                "0 18px 44px rgba(2,6,23,0.5), 0 0 " + (36 * e).toFixed(1) + "px rgba(" + g.rgb + "," + (0.28 * e).toFixed(3) + "), inset 0 1px 0 rgba(255,255,255,0.05)";
+              k.iconEl.style.boxShadow = "0 0 " + (22 * e).toFixed(1) + "px rgba(" + g.rgb + "," + (0.5 * e).toFixed(3) + ")";
+            }
+            k.el.style.transform =
+              "translate(-50%,-50%) translate(" + x.toFixed(2) + "px," + y.toFixed(2) + "px) rotate(" + r.toFixed(2) + "deg) scale(" + (k.s * lift).toFixed(4) + ")";
+            k.el.style.opacity = op.toFixed(3);
+          });
+
+          // Push badge: pops twice while the push card is highlighted, rests at scale 1
+          const pe = bump(t, 7.6, 8.0, 9.4, 10.0);
+          const pop = 1 + 0.45 * pe * Math.abs(Math.sin(((t - 7.6) / 1.2) * Math.PI));
+          pushBadge.style.transform = "scale(" + pop.toFixed(3) + ")";
+          pushBadge.style.boxShadow = "0 0 " + (12 * pe).toFixed(1) + "px rgba(192,132,252," + (0.8 * pe).toFixed(3) + ")";
+
+          // LIVE dot: soft blink, 1.5s period (8 per loop)
+          const lb = 0.5 + 0.5 * Math.cos((t / 1.5) * TAU);
+          liveDot.style.opacity = (0.45 + 0.55 * lb).toFixed(3);
+
+          // Typing dots: staggered wave, 1.5s period
+          typingDots.forEach((d, i) => {
+            const w = 0.5 + 0.5 * Math.sin((t / 1.5) * TAU - i * 0.9);
+            d.style.opacity = (0.3 + 0.7 * w).toFixed(3);
+            d.style.transform = "translateY(" + (-2 * w).toFixed(2) + "px)";
+          });
+        }
+
+        renderAt(0);
+
+        const tl = gsap.timeline({ paused: true });
+
+        // Driver: linear 0 → LOOP; renderAt(LOOP) === renderAt(0)
+        const clock = { t: 0 };
+        tl.fromTo(
+          clock,
+          { t: 0 },
+          {
+            t: LOOP,
+            duration: LOOP,
+            ease: "none",
+            onUpdate: () => renderAt(clock.t),
+          },
+          0,
+        );
+
+        // Gutter orbs: yoyo pairs whose periods divide 12s → back to rest at t=12
+        tl.fromTo("#orb-l1", { x: 0 }, { x: 40, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+        tl.fromTo("#orb-l1", { y: 0 }, { y: 70, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+        tl.fromTo("#orb-l2", { y: 0, scale: 1 }, { y: -80, scale: 1.08, duration: 6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+        tl.fromTo("#orb-r1", { x: 0 }, { x: -40, duration: 6, ease: "power1.inOut", yoyo: true, repeat: 1 }, 0);
+        tl.fromTo("#orb-r1", { y: 0 }, { y: 90, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+        tl.fromTo("#orb-r2", { y: 0 }, { y: -60, duration: 2, ease: "power1.inOut", yoyo: true, repeat: 5 }, 0);
+
+        // Dot field: slides exactly one cell (48px) per loop — seamless
+        tl.fromTo("#dot-field", { x: 0 }, { x: 48, duration: LOOP, ease: "none" }, 0);
+
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      })();
+    </script>
+  </body>
+</html>
