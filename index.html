@@ -970,8 +970,7 @@
       display: block;
     }
 
-    .project-motion .motion-fallback,
-    .shot-slot .shot-fallback {
+    .project-motion .motion-fallback {
       position: absolute;
       inset: 0;
       display: none;
@@ -987,28 +986,13 @@
       border-radius: inherit;
     }
 
-    .project-motion .motion-fallback strong,
-    .shot-slot .shot-fallback strong {
+    .project-motion .motion-fallback strong {
       color: #94a3b8;
       font-weight: 600;
     }
 
-    .project-motion.empty video,
-    .shot-slot.empty img { display: none; }
-    .project-motion.empty .motion-fallback,
-    .shot-slot.empty .shot-fallback { display: flex; }
-
-    .shot-slot {
-      position: relative;
-      width: 200px;
-      aspect-ratio: 9 / 19.5;
-    }
-
-    .screenshot-item .shot-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .project-motion.empty video { display: none; }
+    .project-motion.empty .motion-fallback { display: flex; }
 
     .project-features.single {
       grid-template-columns: 1fr;
@@ -1417,10 +1401,6 @@
         height: 340px;
       }
 
-      .shot-slot {
-        width: 160px;
-      }
-
       .project-card {
         padding: 20px;
       }
@@ -1693,12 +1673,7 @@
       <p class="section-subtitle">Real-world applications I've designed, developed, and shipped.</p>
     </div>
 
-    <!--
-      Each project has:
-        - a motion graphic:   media/projects/<id>.mp4  (rendered with HyperFrames from videos/<id>-motion/)
-        - screenshot slots:   images/projects/<id>-<n>.png  (drop a file in with that name and it appears;
-                              missing files show a dashed placeholder)
-    -->
+    <!-- Each project's motion graphic is media/projects/<id>.mp4, rendered with HyperFrames from videos/<id>-motion/ -->
 
     <!-- Tomo AI -->
     <div class="project-card fade-in">
@@ -1728,20 +1703,6 @@
         <span>Socket.IO</span>
         <span>Google Gemini API</span>
         <span>Prompt Engineering</span>
-      </div>
-      <div class="screenshot-gallery">
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/tomo-ai-1.png" alt="Tomo AI - Chat screen" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-1.png</div></div>
-          <div class="screenshot-caption">Chat Screen</div>
-        </div>
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/tomo-ai-2.png" alt="Tomo AI - Answer with cited sources" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-2.png</div></div>
-          <div class="screenshot-caption">Cited Sources</div>
-        </div>
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/tomo-ai-3.png" alt="Tomo AI - Conversation memory" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/tomo-ai-3.png</div></div>
-          <div class="screenshot-caption">Conversation Memory</div>
-        </div>
       </div>
     </div>
 
@@ -1827,16 +1788,6 @@
         <span>ESLint</span>
         <span>Prettier</span>
       </div>
-      <div class="screenshot-gallery">
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/chatter-1.png" alt="Chatter - Conversations" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/chatter-1.png</div></div>
-          <div class="screenshot-caption">Conversations</div>
-        </div>
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/chatter-2.png" alt="Chatter - Chat thread" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/chatter-2.png</div></div>
-          <div class="screenshot-caption">Chat Thread</div>
-        </div>
-      </div>
     </div>
 
     <!-- Dating & Social -->
@@ -1875,10 +1826,6 @@
         <div class="screenshot-item">
           <img src="images/43433ab3-6124-40d8-929d-61164eb6d031.jpeg" alt="Social App - Profile Dashboard" loading="lazy">
           <div class="screenshot-caption">Profile Dashboard</div>
-        </div>
-        <div class="screenshot-item">
-          <div class="shot-slot"><img src="images/projects/social-dating-1.png" alt="Admin dashboard" loading="lazy"><div class="shot-fallback"><strong>Screenshot</strong>images/projects/social-dating-1.png</div></div>
-          <div class="screenshot-caption">Admin Dashboard</div>
         </div>
       </div>
     </div>
@@ -1980,13 +1927,6 @@
 
   document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .stagger-children').forEach(el => {
     observer.observe(el);
-  });
-
-  // Screenshot slots: show the dashed placeholder until the image file exists
-  document.querySelectorAll('.shot-slot img').forEach(img => {
-    const markEmpty = () => img.parentElement.classList.add('empty');
-    if (img.complete && img.naturalWidth === 0) markEmpty();
-    img.addEventListener('error', markEmpty);
   });
 
   // Project motion graphics: placeholder if the MP4 is missing, play only while on screen,
