@@ -463,6 +463,32 @@
       margin: auto;
     }
 
+    /* ===== ABOUT BACKGROUND MOTION (HyperFrames render) ===== */
+    #about {
+      overflow: hidden;
+    }
+
+    #about .section-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    #about .section-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Fade the video into the page above and below so it never shows a hard seam */
+    #about .section-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #050d1a 0%, transparent 18%, transparent 82%, #050d1a 100%);
+    }
+
     .section-label {
       font-size: 13px;
       color: #38bdf8;
@@ -1477,6 +1503,11 @@
 
 <!-- ABOUT -->
 <section id="about">
+  <div class="section-bg" aria-hidden="true">
+    <video class="bg-motion" autoplay muted loop playsinline preload="metadata" poster="media/about-bg.jpg">
+      <source src="media/about-bg.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="section-inner">
     <div class="fade-in">
       <p class="section-label">Get to know me</p>
@@ -1969,7 +2000,7 @@
     });
   }, { threshold: 0.25 });
 
-  document.querySelectorAll('.project-motion video').forEach(video => {
+  document.querySelectorAll('.project-motion video, video.bg-motion').forEach(video => {
     const source = video.querySelector('source');
     source.addEventListener('error', () => video.parentElement.classList.add('empty'));
     if (reduceMotion) {
